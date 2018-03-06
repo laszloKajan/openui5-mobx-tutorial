@@ -1,3 +1,14 @@
+jQuery.sap.registerModuleShims({
+	"org/js/mobx/3.5.1/mobx.umd.min": {
+		exports: "mobx"
+	}
+});
+
+/* eslint-disable sap-no-hardcoded-url */
+jQuery.sap.registerModulePath("org.js.mobx", "https://cdnjs.cloudflare.com/ajax/libs/mobx/3.5.1/mobx.min.js");
+jQuery.sap.registerModulePath("sap.ui.mobx", "https://raw.githubusercontent.com/laszloKajan/openui5-mobx-model/master/src");
+/* eslint-enable sap-no-hardcoded-url */
+
 sap.ui.define([
 	"sap/ui/core/UIComponent",
 	"sap/ui/Device",
