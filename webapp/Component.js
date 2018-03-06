@@ -1,11 +1,11 @@
 sap.ui.define([
 	"sap/ui/core/UIComponent",
 	"sap/ui/Device",
-	"org/debian/lkajanmobxTutorial/model/models"
+	"org/debian/lkajan/mobxTutorial/model/models"
 ], function(UIComponent, Device, models) {
 	"use strict";
 
-	return UIComponent.extend("org.debian.lkajanmobxTutorial.Component", {
+	return UIComponent.extend("org.debian.lkajan.mobxTutorial.Component", {
 
 		metadata: {
 			manifest: "json"

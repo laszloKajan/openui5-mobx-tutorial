@@ -3,7 +3,7 @@ sap.ui.define([
 ], function(Controller) {
 	"use strict";
 
-	return Controller.extend("org.debian.lkajanmobxTutorial.controller.Application", {
+	return Controller.extend("org.debian.lkajan.mobxTutorial.controller.Application", {
 
 	});
 });
