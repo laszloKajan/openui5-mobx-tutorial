@@ -1,9 +1,72 @@
-<mvc:View controllerName="org.debian.lkajan.mobxTutorial.controller.Application" xmlns:html="http://www.w3.org/1999/xhtml"
-	xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
+<mvc:View xmlns:html="http://www.w3.org/1999/xhtml" xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns="sap.m" controllerName="org.debian.lkajan.mobxTutorial.controller.Application" displayBlock="true">
 	<App>
 		<pages>
 			<Page title="{i18n>title}">
-				<content></content>
+				<content>
+					<f:Form editable="true">
+						<f:layout>
+							<f:ResponsiveGridLayout/>
+						</f:layout>
+						<f:formContainers>
+							<f:FormContainer>
+								<f:formElements>
+									<f:FormElement visible="true" label="">
+										<f:fields>
+											<Label text="First Name" design="Bold"/>
+											<Label text="Last Name" design="Bold"/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement visible="true" label="{i18n>mainCharater}">
+										<f:fields>
+											<Input id="inputSWFirstName"
+												value="{path: 'domain&gt;/ShowWhite/FirstName', type: 'sap.ui.model.type.String', constraints: {minLength: 3, search: '^[^0-9\\s]+$'}}"
+												change="onChangeRevalidate"/>
+											<Input id="inputSWLastName"
+												value="{path: 'domain&gt;/ShowWhite/LastName', type: 'sap.ui.model.type.String', constraints: {minLength: 3, search: '^[^0-9\\s]+$'}}"
+												change="onChangeRevalidate"/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement visible="true" label="{i18n>inModel}">
+										<f:fields>
+											<Text text="`{domain&gt;/ShowWhite/FirstName}'"/>
+											<Text text="`{domain&gt;/ShowWhite/LastName}'"/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement visible="false" label="{i18n>dwarf1}">
+										<f:fields>
+											<Input/>
+											<Input/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement visible="false" label="{i18n>dwarf2}">
+										<f:fields>
+											<Input/>
+											<Input/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement visible="false" label="{i18n>dwarf3}">
+										<f:fields>
+											<Input/>
+											<Input/>
+										</f:fields>
+									</f:FormElement>
+								</f:formElements>
+							</f:FormContainer>
+						</f:formContainers>
+					</f:Form>
+				</content>
+				<footer>
+					<Toolbar>
+						<Button icon="sap-icon://message-popup" visible="true" text="{= ${/messageCount} &gt; 0 ? ${/messageCount} : ''}" type="{= ${/messageCount} &gt; 0 ? 'Emphasized' : 'Default'}"
+							press="onValidationMessagesPress"/>
+						<Button text="{i18n>fixSWFirstName}" press="onFixSWFirstName"/>
+						<ToolbarSpacer/>
+						<Button id="btnAddDwarf" text="{i18n>addDwarf}" enabled="true" visible="false"/>
+						<Button id="btnRemoveDwarf" text="{i18n>removeDwarf}" enabled="true" visible="false"/>
+						<Button id="btnSubmit" text="{i18n>submit}" enabled="{/canSubmit}" type="{= ${/canSubmit} ? 'Emphasized' : 'Default'}"/>
+					</Toolbar>
+				</footer>
 			</Page>
 		</pages>
 	</App>
