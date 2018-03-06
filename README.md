@@ -9,4 +9,4 @@ Built with unofficial [ui5 bindings](https://github.com/laszloKajan/openui5-mobx
 
 ui5 bindings are a fork of [Christian Theilemann's work](https://github.com/geekflyer/openui5-mobx-model), now seemingly abandoned.
 
-Huge thanks to Christian Theilemann, also for his excellent blog post and insights (Reactive state management in SAPUI5 via MobX)[https://blogs.sap.com/2017/01/30/advanced-state-management-in-sapui5-via-mobx/].
+Huge thanks to Christian Theilemann, also for his excellent blog post and insights [Reactive state management in SAPUI5 via MobX](https://blogs.sap.com/2017/01/30/advanced-state-management-in-sapui5-via-mobx/).
