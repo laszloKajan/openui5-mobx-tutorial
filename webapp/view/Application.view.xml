@@ -47,34 +47,6 @@
 									</f:FormElement>
 								</f:formElements>
 							</f:FormContainer>
-							<f:FormContainer title="{i18n>dwarfs}" visible="false">
-								<f:formElements>
-									<f:FormElement visible="true" label="">
-										<f:fields>
-											<Label text="{i18n>firstName}" design="Bold"/>
-											<Label text="{i18n>lastName}" design="Bold"/>
-										</f:fields>
-									</f:FormElement>
-									<f:FormElement visible="false" label="{i18n>dwarf1}">
-										<f:fields>
-											<Input/>
-											<Input/>
-										</f:fields>
-									</f:FormElement>
-									<f:FormElement visible="false" label="{i18n>dwarf2}">
-										<f:fields>
-											<Input/>
-											<Input/>
-										</f:fields>
-									</f:FormElement>
-									<f:FormElement visible="false" label="{i18n>dwarf3}">
-										<f:fields>
-											<Input/>
-											<Input/>
-										</f:fields>
-									</f:FormElement>
-								</f:formElements>
-							</f:FormContainer>
 						</f:formContainers>
 					</f:Form>
 				</content>
@@ -84,8 +56,6 @@
 							type="{= ${/messageCount} &gt; 0 ? 'Emphasized' : 'Default'}" press="onValidationMessagesPress"/>
 						<Button text="{i18n>fixSWFirstName}" press="onFixSWFirstName"/>
 						<ToolbarSpacer/>
-						<Button id="btnAddDwarf" text="{i18n>addDwarf}" enabled="true" visible="false"/>
-						<Button id="btnRemoveDwarf" text="{i18n>removeDwarf}" enabled="true" visible="false"/>
 						<Button id="btnSubmit" text="{i18n>submit}" enabled="{/canSubmit}" type="{= ${/canSubmit} ? 'Emphasized' : 'Default'}"/>
 					</Toolbar>
 				</footer>
