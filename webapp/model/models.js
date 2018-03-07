@@ -6,19 +6,20 @@ sap.ui.define([
 	"sap/ui/model/type/String",
 	"org/debian/lkajan/mobxTutorial/model/type/Generator",
 	"sap/ui/model/ParseException",
-	"sap/ui/model/ValidateException"
-], function(JSONModel, Device, __mobx, MobxModel, String, MobxModelTypeGenerator, ParseException, ValidateException) {
+	"sap/ui/model/ValidateException",
+	"sap/ui/core/message/Message"
+], function(JSONModel, Device, __mobx, MobxModel, String, MobxModelTypeGenerator, ParseException, ValidateException, Message) {
 	"use strict";
 
 	var MobxModelTypeString = MobxModelTypeGenerator.getExtendedType(String, "String");
 	var oMobxModelTypeStringName = new MobxModelTypeString({}, {
 		search: /^(|[^0-9\s]{3,})$/
 	});
-	
+
 	var oValidationMemory = {};
 	var _memoize = function(fFunc) { // Consider something cleverer
 		var fMemFunc = function() {
-			var sKey = JSON.stringify(arguments);
+			var sKey = JSON.stringify(arguments); // Well, we should hash this really
 
 			if (oValidationMemory.hasOwnProperty(sKey)) {
 				jQuery.sap.clearDelayedCall(oValidationMemory[sKey].sDelayedCallId);
@@ -44,6 +45,61 @@ sap.ui.define([
 			}
 		};
 		return fMemFunc;
+	};
+
+	var fTransformValidationToMessage = __mobx.createTransformer(function(oValidation) {
+		return new Message({
+			message: oValidation.valueStateText,
+			type: oValidation.valueState
+		});
+	});
+	var fTransformModelToValMsgArray = function(__p) { // ({node: stateNode, path: "", acc: aAccumulator})
+
+		var oNode = __p.node;
+		var oAcc = __p.acc;
+		var bIsObservableObject = __mobx.isObservableObject(oNode);
+		var aKeys = __mobx.isObservableArray(oNode) ? Object.keys(oNode.peek()) : Object.getOwnPropertyNames(oNode); // We need get() properties too, but ...
+
+		aKeys.filter(function(sKey) {
+			return sKey.indexOf("$") === -1;
+		}).reduce(function(poAcc, sKey) {
+
+			var sValLeafKey = sKey + "$Validation";
+
+			if (oNode.hasOwnProperty(sValLeafKey)) {
+
+				var oValidation = oNode[sValLeafKey];
+
+				// console.log(__p.path + "/" + sKey + ": " + oValidation.valueState);
+
+				if (oValidation.valueState !== "None") {
+					var oMessage = fTransformValidationToMessage(oValidation);
+					poAcc.push(oMessage);
+				}
+			} else {
+				// Descend?
+				switch (typeof(oNode[sKey])) {
+					case "boolean":
+					case "number":
+					case "string":
+					case "undefined":
+						break;
+					default:
+						if (!bIsObservableObject || Object.getOwnPropertyDescriptor(oNode, sKey).enumerable) { // Model calculated (get) properties become 'enumberable = false' while being made observable
+
+							var childNode = oNode[sKey];
+							fTransformModelToValMsgArray({
+								node: childNode,
+								path: __p.path + "/" + sKey,
+								acc: poAcc
+							});
+						}
+				}
+			}
+			return oAcc;
+		}, oAcc);
+
+		return oAcc;
 	};
 
 	var models = {
@@ -101,6 +157,14 @@ sap.ui.define([
 			}
 			return oRet;
 		},
+
+		transformModelToValidationMessageArray: __mobx.createTransformer(function(oSource) {
+			return fTransformModelToValMsgArray({
+				node: oSource,
+				path: "",
+				acc: []
+			});
+		}),
 
 		_transformModelPropertyToValidationByType: _memoize(function(oSource) { // Memoize
 
