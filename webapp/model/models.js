@@ -49,8 +49,9 @@ sap.ui.define([
 
 	var fTransformValidationToMessage = __mobx.createTransformer(function(oValidation) {
 		return new Message({
-			message: oValidation.valueStateText,
-			type: oValidation.valueState
+			message: oValidation.valueStateText.replace(/([{}])/g, "\\$1"),
+			type: oValidation.valueState,
+			validation: true
 		});
 	});
 	var fTransformModelToValMsgArray = function(__p) { // ({node: stateNode, path: "", acc: aAccumulator})

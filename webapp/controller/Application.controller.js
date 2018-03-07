@@ -9,9 +9,10 @@ sap.ui.define([
 	"sap/ui/model/ValidateException",
 	"sap/ui/model/ListBinding",
 	"org/debian/lkajan/mobxTutorial/model/models",
-	"org/js/mobx/3.5.1/mobx.umd.min"
+	"org/js/mobx/3.5.1/mobx.umd.min",
+	"sap/ui/mobx/MobxModel"
 ], function(MessagePopover, MessagePopoverItem, Controller, JSONModel, ControlMessageProcessor, TypeString, ParseException,
-	ValidateException, ListBinding, models, __mobx) {
+	ValidateException, ListBinding, models, __mobx, MobxModel) {
 	"use strict";
 
 	var oMessageTemplate = new MessagePopoverItem({
@@ -24,7 +25,7 @@ sap.ui.define([
 
 	var oMessagePopover = new MessagePopover({
 		items: {
-			path: "/",
+			path: "/validationMessages",
 			template: oMessageTemplate
 		}
 	});
@@ -39,8 +40,11 @@ sap.ui.define([
 
 			// Application model
 			var oAppModel = new MobxModel(__mobx.observable({
-				messageCount: 0,
-				canSubmit: false
+				canSubmit: false,
+				validationMessages: [],
+				get validationMessagesLength() {
+					return this.validationMessages.length;
+				}
 			}));
 			this.getView().setModel(oAppModel);
 
@@ -51,31 +55,23 @@ sap.ui.define([
 			oMessageManager.registerObject(this.getView(), true); // Handle validation for this view
 
 			//	Merge messages from oMessageManager and oDomainModel
-			this.oMergedMessageModel = new JSONModel([]);
-
 			this.oObservableValidation = __mobx.observable({
-				messages: [] // will be replaced by transformation to observable array
+				Messages: [] // will be replaced by transformation to observable array
 			});
-			
-// TODO
-		_updateMessageCount: function() {
-
-			this.getView().getModel().setProperty("/messageCount", oMessagePopover.getModel().getData().length);
-		},
 
 			//	Transform domain model to validation message array
 			this._fValidationAutorunDisposer = __mobx.reaction(
 				models.transformModelToValidationMessageArray.bind(this, oDomainModel.getObservable()),
 				function(aMessages) {
 					// Consider debouncing
-					this.oObservableValidation.messages = aMessages;
+					this.oObservableValidation.Messages = aMessages;
 				}.bind(this)
 			);
 
 			//	Merge messages when oDomainModel validation changes
 			__mobx.reaction(
 				function() {
-					return this.oObservableValidation.messages.peek();
+					return this.oObservableValidation.Messages.peek();
 				}.bind(this),
 				this._mergeMessageModelMessages.bind(this)
 			);
@@ -84,7 +80,7 @@ sap.ui.define([
 			this._oMessageModelBinding = new ListBinding(oMessageManager.getMessageModel(), "/");
 			this._oMessageModelBinding.attachChange(this._mergeMessageModelMessages, this);
 
-			oMessagePopover.setModel(this.oMergedMessageModel);
+			oMessagePopover.setModel(oAppModel);
 		},
 
 		onExit: function() {
@@ -133,13 +129,13 @@ sap.ui.define([
 				throw oEx;
 			}
 		},
-		
+
 		_mergeMessageModelMessages: function() {
 
 			var oMessageManager = sap.ui.getCore().getMessageManager();
-			this.oMergedMessageModel.setData(
-				oMessageManager.getMessageModel().getData().concat(this.oObservableValidation.messages.peek())
-			);
+
+			this.getView().getModel().getObservable().validationMessages =
+				oMessageManager.getMessageModel().getData().concat(this.oObservableValidation.Messages.peek());
 		},
 
 		_validateInput: function(sId) {
