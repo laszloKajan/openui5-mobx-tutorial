@@ -20,10 +20,10 @@
 									<f:FormElement label="{i18n>name}">
 										<f:fields>
 											<Input id="inputSWFirstName"
-												value="{path: 'domain&gt;/ShowWhite/FirstName', type: 'sap.ui.model.type.String', constraints: {minLength: 3, search: '^[^0-9\\s]+$'}}"
+												value="{path: 'domain&gt;/ShowWhite/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
 												change="onChangeRevalidate"/>
 											<Input id="inputSWLastName"
-												value="{path: 'domain&gt;/ShowWhite/LastName', type: 'sap.ui.model.type.String', constraints: {minLength: 3, search: '^[^0-9\\s]+$'}}"
+												value="{path: 'domain&gt;/ShowWhite/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
 												change="onChangeRevalidate"/>
 										</f:fields>
 									</f:FormElement>
@@ -36,7 +36,7 @@
 									<f:FormElement label="{i18n>age}">
 										<f:fields>
 											<Input id="inputSWAge"
-												value="{path: 'domain&gt;/ShowWhite/Age', type: 'sap.ui.model.type.Integer', constraints: {minimum: 18, maximum: 29}}"
+												value="{path: 'domain&gt;/ShowWhite/Age', type: 'sap.ui.model.type.Integer', constraints: {minimum: 17, maximum: 29}}"
 												change="onChangeRevalidate"/>
 										</f:fields>
 									</f:FormElement>
