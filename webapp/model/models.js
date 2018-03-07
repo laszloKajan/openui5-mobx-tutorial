@@ -14,10 +14,12 @@ sap.ui.define([
 		},
 		
 		createDomainModel: function() {
-			var oModel = new JSONModel({
+			var state = __mobx.observable({
 				ShowWhite: {},
 				Dwarfs: []
 			});
+			
+			var oModel = new MobxModel(state);
 			
 			return oModel;
 		}
