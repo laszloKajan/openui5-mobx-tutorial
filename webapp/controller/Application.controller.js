@@ -7,9 +7,10 @@ sap.ui.define([
 	"sap/ui/model/type/String",
 	"sap/ui/model/ParseException",
 	"sap/ui/model/ValidateException",
-	"sap/ui/model/ListBinding"
+	"sap/ui/model/ListBinding",
+	"org/debian/lkajan/mobxTutorial/model/models"
 ], function(MessagePopover, MessagePopoverItem, Controller, JSONModel, ControlMessageProcessor, TypeString, ParseException,
-	ValidateException, ListBinding) {
+	ValidateException, ListBinding, models) {
 	"use strict";
 
 	var oMessageTemplate = new MessagePopoverItem({
@@ -32,10 +33,7 @@ sap.ui.define([
 		onInit: function() {
 
 			// Domain model
-			var oDomainModel = new JSONModel({
-				ShowWhite: {},
-				Dwarfs: []
-			});
+			var oDomainModel = models.createDomainModel();
 			this.getView().setModel(oDomainModel, "domain");
 
 			// Application model
