@@ -8,7 +8,8 @@ sap.ui.define([
 	"sap/ui/model/ParseException",
 	"sap/ui/model/ValidateException",
 	"sap/ui/model/ListBinding"
-], function(MessagePopover, MessagePopoverItem, Controller, JSONModel, ControlMessageProcessor, TypeString, ParseException, ValidateException, ListBinding) {
+], function(MessagePopover, MessagePopoverItem, Controller, JSONModel, ControlMessageProcessor, TypeString, ParseException,
+	ValidateException, ListBinding) {
 	"use strict";
 
 	var oMessageTemplate = new MessagePopoverItem({
@@ -35,7 +36,7 @@ sap.ui.define([
 				ShowWhite: {}
 			});
 			this.getView().setModel(oDomainModel, "domain");
-			
+
 			// Application model
 			var oAppModel = new JSONModel({
 				messageCount: 0,
@@ -60,14 +61,14 @@ sap.ui.define([
 			this._oMessageModelBinding.detachChange(this._updateMessageCount, this);
 			this._oMessageModelBinding.destroy();
 		},
-		
+
 		onChangeRevalidate: function(oEvent) {
-		
+
 			this.validateDomain();
 		},
-		
+
 		onFixSWFirstName: function() {
-			
+
 			this.getView().getModel("domain").setProperty("/ShowWhite/FirstName", "Snow");
 			this.validateDomain();
 		},
@@ -76,35 +77,41 @@ sap.ui.define([
 
 			oMessagePopover.toggle(oEvent.getSource());
 		},
-	
+
 		validateDomain: function() {
-			
-			var bValid = true;
-			
-			bValid = bValid && this._validateInput("inputSWFirstName");
-			bValid = bValid && this._validateInput("inputSWLastName");
-			
-			this.getView().getModel().setProperty("/canSubmit", bValid);
+
+			try {
+				var bValid = true;
+
+				bValid = bValid && this._validateInput("inputSWFirstName");
+				bValid = bValid && this._validateInput("inputSWLastName");
+				bValid = bValid && this._validateInput("inputSWAge");
+
+				this.getView().getModel().setProperty("/canSubmit", bValid);
+			} catch (oEx) {
+				this.getView().getModel().setProperty("/canSubmit", false);
+				throw oEx;
+			}
 		},
-		
+
 		_updateMessageCount: function() {
-			
+
 			this.getView().getModel().setProperty("/messageCount", oMessagePopover.getModel().getData().length);
 		},
-		
+
 		_validateInput: function(sId) {
-			
+
 			var bValid = true;
 			var oControl = this.byId(sId);
-			
+
 			try {
 				var oControlBinding = oControl.getBinding("value");
 				var oType = oControlBinding.getType();
 				var oExternalValue = oControl.getProperty("value");
 				var oInternalValue = oType.parseValue(oExternalValue, oControlBinding.sInternalType);
 				oType.validateValue(oInternalValue);
-			} catch(oException) {
-				if(oException instanceof ParseException || oException instanceof ValidateException) {
+			} catch (oException) {
+				if (oException instanceof ParseException || oException instanceof ValidateException) {
 					bValid = false;
 				} else {
 					throw oException;

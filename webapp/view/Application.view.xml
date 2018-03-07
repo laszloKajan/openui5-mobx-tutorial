@@ -9,15 +9,15 @@
 							<f:ResponsiveGridLayout/>
 						</f:layout>
 						<f:formContainers>
-							<f:FormContainer>
+							<f:FormContainer title="{i18n>mainCharater}">
 								<f:formElements>
 									<f:FormElement visible="true" label="">
 										<f:fields>
-											<Label text="First Name" design="Bold"/>
-											<Label text="Last Name" design="Bold"/>
+											<Label text="{i18n>firstName}" design="Bold"/>
+											<Label text="{i18n>lastName}" design="Bold"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="true" label="{i18n>mainCharater}">
+									<f:FormElement label="{i18n>name}">
 										<f:fields>
 											<Input id="inputSWFirstName"
 												value="{path: 'domain&gt;/ShowWhite/FirstName', type: 'sap.ui.model.type.String', constraints: {minLength: 3, search: '^[^0-9\\s]+$'}}"
@@ -27,10 +27,32 @@
 												change="onChangeRevalidate"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="true" label="{i18n>inModel}">
+									<f:FormElement label="{i18n>inModel}">
 										<f:fields>
 											<Text text="`{domain&gt;/ShowWhite/FirstName}'"/>
 											<Text text="`{domain&gt;/ShowWhite/LastName}'"/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement label="{i18n>age}">
+										<f:fields>
+											<Input id="inputSWAge"
+												value="{path: 'domain&gt;/ShowWhite/Age', type: 'sap.ui.model.type.Integer', constraints: {minimum: 18, maximum: 29}}"
+												change="onChangeRevalidate"/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement label="{i18n>inModel}">
+										<f:fields>
+											<Text text="`{domain&gt;/ShowWhite/Age}'"/>
+										</f:fields>
+									</f:FormElement>
+								</f:formElements>
+							</f:FormContainer>
+							<f:FormContainer title="{i18n>dwarfs}" visible="false">
+								<f:formElements>
+									<f:FormElement visible="true" label="">
+										<f:fields>
+											<Label text="{i18n>firstName}" design="Bold"/>
+											<Label text="{i18n>lastName}" design="Bold"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement visible="false" label="{i18n>dwarf1}">
@@ -58,8 +80,8 @@
 				</content>
 				<footer>
 					<Toolbar>
-						<Button icon="sap-icon://message-popup" visible="true" text="{= ${/messageCount} &gt; 0 ? ${/messageCount} : ''}" type="{= ${/messageCount} &gt; 0 ? 'Emphasized' : 'Default'}"
-							press="onValidationMessagesPress"/>
+						<Button icon="sap-icon://message-popup" visible="true" text="{= ${/messageCount} &gt; 0 ? ${/messageCount} : ''}"
+							type="{= ${/messageCount} &gt; 0 ? 'Emphasized' : 'Default'}" press="onValidationMessagesPress"/>
 						<Button text="{i18n>fixSWFirstName}" press="onFixSWFirstName"/>
 						<ToolbarSpacer/>
 						<Button id="btnAddDwarf" text="{i18n>addDwarf}" enabled="true" visible="false"/>
