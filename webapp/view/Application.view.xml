@@ -20,29 +20,29 @@
 									<f:FormElement label="{i18n>name}">
 										<f:fields>
 											<Input id="inputSWFirstName"
-												value="{path: 'domain&gt;/ShowWhite/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+												value="{path: 'domain&gt;/SnowWhite/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
 												change="onChangeRevalidate"/>
 											<Input id="inputSWLastName"
-												value="{path: 'domain&gt;/ShowWhite/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+												value="{path: 'domain&gt;/SnowWhite/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
 												change="onChangeRevalidate"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement label="{i18n>inModel}">
 										<f:fields>
-											<Text text="`{domain&gt;/ShowWhite/FirstName}'"/>
-											<Text text="`{domain&gt;/ShowWhite/LastName}'"/>
+											<Text text="`{domain&gt;/SnowWhite/FirstName}'"/>
+											<Text text="`{domain&gt;/SnowWhite/LastName}'"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement label="{i18n>age}">
 										<f:fields>
 											<Input id="inputSWAge"
-												value="{path: 'domain&gt;/ShowWhite/Age', type: 'sap.ui.model.type.Integer', constraints: {minimum: 17, maximum: 29}}"
+												value="{path: 'domain&gt;/SnowWhite/Age', type: 'sap.ui.model.type.Integer', constraints: {minimum: 17, maximum: 29}}"
 												change="onChangeRevalidate"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement label="{i18n>inModel}">
 										<f:fields>
-											<Text text="`{domain&gt;/ShowWhite/Age}'"/>
+											<Text text="`{domain&gt;/SnowWhite/Age}'"/>
 										</f:fields>
 									</f:FormElement>
 								</f:formElements>

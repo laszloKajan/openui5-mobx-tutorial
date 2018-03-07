@@ -15,7 +15,7 @@ sap.ui.define([
 		
 		createDomainModel: function() {
 			var state = __mobx.observable({
-				ShowWhite: {
+				SnowWhite: {
 					FirstName: undefined,
 					LastName: undefined,
 					Age: undefined

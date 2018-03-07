@@ -68,7 +68,7 @@ sap.ui.define([
 
 		onFixSWFirstName: function() {
 
-			this.getView().getModel("domain").setProperty("/ShowWhite/FirstName", "Snow");
+			this.getView().getModel("domain").setProperty("/SnowWhite/FirstName", "Snow");
 			this.validateDomain();
 		},
 
