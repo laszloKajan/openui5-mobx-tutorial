@@ -33,7 +33,8 @@ sap.ui.define([
 
 			// Domain model
 			var oDomainModel = new JSONModel({
-				ShowWhite: {}
+				ShowWhite: {},
+				Dwarfs: []
 			});
 			this.getView().setModel(oDomainModel, "domain");
 
