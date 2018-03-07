@@ -60,6 +60,14 @@ sap.ui.define([
 			this._oMessageModelBinding.detachChange(this._updateMessageCount, this);
 			this._oMessageModelBinding.destroy();
 		},
+		
+		onChangeSetChanged: function(oEvent) {
+			
+			var oModel = oEvent.getSource().getBinding("value").getModel();
+			var sPath = oEvent.getSource().getBinding("value").getPath();
+
+			oModel.setProperty(sPath + "$Changed", true);
+		},
 
 		onChangeRevalidate: function(oEvent) {
 
