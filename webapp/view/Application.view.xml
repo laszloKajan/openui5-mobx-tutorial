@@ -57,8 +57,8 @@
 									</f:FormElement>
 									<f:FormElement visible="true" label="{i18n>dwarf0}">
 										<f:fields>
-											<Input value="{path: 'domain&gt;/Dwarfs/0/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})/>}}"/>
-											<Input value="{path: 'domain&gt;/Dwarfs/0/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})/>}}"/>
+											<Input value="{path: 'domain&gt;/Dwarfs/0/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
+											<Input value="{path: 'domain&gt;/Dwarfs/0/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement visible="true" label="{i18n>inModel}">
@@ -69,8 +69,8 @@
 									</f:FormElement>
 									<f:FormElement visible="true" label="{i18n>dwarf1}">
 										<f:fields>
-											<Input value="{path: 'domain&gt;/Dwarfs/1/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})/>}}"/>
-											<Input value="{path: 'domain&gt;/Dwarfs/1/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})/>}}"/>
+											<Input value="{path: 'domain&gt;/Dwarfs/1/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
+											<Input value="{path: 'domain&gt;/Dwarfs/1/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement visible="true" label="{i18n>inModel}">
@@ -81,8 +81,8 @@
 									</f:FormElement>
 									<f:FormElement visible="true" label="{i18n>dwarf2}">
 										<f:fields>
-											<Input value="{path: 'domain&gt;/Dwarfs/2/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})/>}}"/>
-											<Input value="{path: 'domain&gt;/Dwarfs/2/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})/>}}"/>
+											<Input value="{path: 'domain&gt;/Dwarfs/2/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
+											<Input value="{path: 'domain&gt;/Dwarfs/2/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement visible="true" label="{i18n>inModel}">
