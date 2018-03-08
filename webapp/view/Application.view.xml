@@ -21,13 +21,13 @@
 										<f:fields>
 											<Input id="inputSWFirstName"
 												value="{path: 'domain&gt;/SnowWhite/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{domain&gt;/SnowWhite/FirstName$Validation/valueState}"
-												valueStateText="{domain&gt;/SnowWhite/FirstName$Validation/valueStateText}"
+												valueState="{= ${domain&gt;/SnowWhite/FirstName$Validation/valid} ? ${domain&gt;/SnowWhite/FullName$Validation/valueState} : ${domain&gt;/SnowWhite/FirstName$Validation/valueState}}"
+												valueStateText="{= ${domain&gt;/SnowWhite/FirstName$Validation/valid} ? ${domain&gt;/SnowWhite/FullName$Validation/valueStateText} : ${domain&gt;/SnowWhite/FirstName$Validation/valueStateText}}"
 												change="onChangeSetChanged"/>
 											<Input id="inputSWLastName"
 												value="{path: 'domain&gt;/SnowWhite/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{domain&gt;/SnowWhite/LastName$Validation/valueState}"
-												valueStateText="{domain&gt;/SnowWhite/LastName$Validation/valueStateText}"
+												valueState="{= ${domain&gt;/SnowWhite/LastName$Validation/valid} ? ${domain&gt;/SnowWhite/FullName$Validation/valueState} : ${domain&gt;/SnowWhite/LastName$Validation/valueState}}"
+												valueStateText="{= ${domain&gt;/SnowWhite/LastName$Validation/valid} ? ${domain&gt;/SnowWhite/FullName$Validation/valueStateText} : ${domain&gt;/SnowWhite/LastName$Validation/valueStateText}}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
@@ -35,6 +35,11 @@
 										<f:fields>
 											<Text text="`{domain&gt;/SnowWhite/FirstName}'"/>
 											<Text text="`{domain&gt;/SnowWhite/LastName}'"/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement label="">
+										<f:fields>
+											<Text text="`{domain&gt;/SnowWhite/FullName}'"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement label="{i18n>age}">
