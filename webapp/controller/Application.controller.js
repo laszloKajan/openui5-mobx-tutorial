@@ -40,7 +40,10 @@ sap.ui.define([
 
 			// Application model
 			var oAppModel = new MobxModel(__mobx.observable({
-				canSubmit: false,
+				get canSubmit() {
+					return this.validateDomainResult && this.validationMessagesLength === 0;
+				},
+				validateDomainResult: false,
 				validationMessages: [],
 				get validationMessagesLength() {
 					return this.validationMessages.length;
@@ -106,7 +109,6 @@ sap.ui.define([
 		onFixSWFirstName: function() {
 
 			this.getView().getModel("domain").setProperty("/SnowWhite/FirstName", "Snow");
-			this.validateDomain();
 		},
 
 		onValidationMessagesPress: function(oEvent) {
@@ -119,13 +121,13 @@ sap.ui.define([
 			try {
 				var bValid = true;
 
-				bValid = bValid && this._validateInput("inputSWFirstName");
+				// Now reactive // bValid = bValid && this._validateInput("inputSWFirstName");
 				bValid = bValid && this._validateInput("inputSWLastName");
 				bValid = bValid && this._validateInput("inputSWAge");
 
-				this.getView().getModel().setProperty("/canSubmit", bValid);
+				this.getView().getModel().setProperty("/validateDomainResult", bValid);
 			} catch (oEx) {
-				this.getView().getModel().setProperty("/canSubmit", false);
+				this.getView().getModel().setProperty("/validateDomainResult", false);
 				throw oEx;
 			}
 		},
