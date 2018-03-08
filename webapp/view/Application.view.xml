@@ -56,7 +56,7 @@
 									</f:FormElement>
 								</f:formElements>
 							</f:FormContainer>
-							<f:FormContainer title="{i18n>dwarfs}" visible="false">
+							<f:FormContainer title="{i18n>dwarfs}" visible="true">
 								<f:formElements>
 									<f:FormElement visible="true" label="">
 										<f:fields>
@@ -64,37 +64,37 @@
 											<Label text="{i18n>lastName}" design="Bold"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="true" label="{i18n>dwarf0}">
+									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 1}" label="{i18n>dwarf0}">
 										<f:fields>
 											<Input value="{path: 'domain&gt;/Dwarfs/0/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
 											<Input value="{path: 'domain&gt;/Dwarfs/0/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="true" label="{i18n>inModel}">
+									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 1}" label="{i18n>inModel}">
 										<f:fields>
 											<Text text="`{domain&gt;/Dwarfs/0/FirstName}'"/>
 											<Text text="`{domain&gt;/Dwarfs/0/LastName}'"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="true" label="{i18n>dwarf1}">
+									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 2}" label="{i18n>dwarf1}">
 										<f:fields>
 											<Input value="{path: 'domain&gt;/Dwarfs/1/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
 											<Input value="{path: 'domain&gt;/Dwarfs/1/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="true" label="{i18n>inModel}">
+									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 2}" label="{i18n>inModel}">
 										<f:fields>
 											<Text text="`{domain&gt;/Dwarfs/1/FirstName}'"/>
 											<Text text="`{domain&gt;/Dwarfs/1/LastName}'"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="true" label="{i18n>dwarf2}">
+									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 3}" label="{i18n>dwarf2}">
 										<f:fields>
 											<Input value="{path: 'domain&gt;/Dwarfs/2/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
 											<Input value="{path: 'domain&gt;/Dwarfs/2/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="true" label="{i18n>inModel}">
+									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 3}" label="{i18n>inModel}">
 										<f:fields>
 											<Text text="`{domain&gt;/Dwarfs/2/FirstName}'"/>
 											<Text text="`{domain&gt;/Dwarfs/2/LastName}'"/>
@@ -111,8 +111,8 @@
 							type="{= ${/validationMessagesLength} &gt; 0 ? 'Emphasized' : 'Default'}" press="onValidationMessagesPress"/>
 						<Button text="{i18n>fixSWFirstName}" press="onFixSWFirstName"/>
 						<ToolbarSpacer/>
-						<Button id="btnAddDwarf" text="{i18n>addDwarf}" enabled="true" visible="false"/>
-						<Button id="btnRemoveDwarf" text="{i18n>removeDwarf}" enabled="true" visible="false"/>
+						<Button id="btnAddDwarf" text="{i18n>addDwarf}" enabled="{= ${domain&gt;/DwarfCount} &lt; 3}" press="onPressAddDwarf"/>
+						<Button id="btnRemoveDwarf" text="{i18n>removeDwarf}" enabled="{= ${domain&gt;/DwarfCount} &gt; 0}" press="onPressRemoveDwarf"/>
 						<Button id="btnSubmit" text="{i18n>submit}" enabled="{/canSubmit}" type="{= ${/canSubmit} ? 'Emphasized' : 'Default'}"/>
 					</Toolbar>
 				</footer>

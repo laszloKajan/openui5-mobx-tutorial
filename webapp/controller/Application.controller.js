@@ -33,13 +33,13 @@ sap.ui.define([
 	return Controller.extend("org.debian.lkajan.mobxTutorial.controller.Application", {
 
 		onInit: function() {
-			
+
 			var that = this;
 
 			// Domain model
 			var oDomainModel = models.createDomainModel();
 			this.getView().setModel(oDomainModel, "domain");
-			
+
 			// Application model
 			var oAppModel = new MobxModel(__mobx.observable({
 				get canSubmit() {
@@ -52,7 +52,7 @@ sap.ui.define([
 				}
 			}));
 			this.getView().setModel(oAppModel);
-			
+
 			// Message management
 			var oMessageManager = sap.ui.getCore().getMessageManager(),
 				oMessageProcessor = new ControlMessageProcessor();
@@ -77,10 +77,13 @@ sap.ui.define([
 				}.bind(this),
 				true // Fire immediately
 			);
-			
+
 			//	Transform validation array to validation message array
 			this._fAutorunDisposerObservableValidationMessages = __mobx.reaction(
-				models.transformValidationArrayToValidationMessages.bind(this, {source: this.oObservableValidation, validationArrayKey: "results"}),
+				models.transformValidationArrayToValidationMessages.bind(this, {
+					source: this.oObservableValidation,
+					validationArrayKey: "results"
+				}),
 				function(aValidationMessages) {
 					// Consider debouncing
 					this.oObservableValidationMessages.messages = aValidationMessages;
@@ -133,6 +136,25 @@ sap.ui.define([
 		onValidationMessagesPress: function(oEvent) {
 
 			oMessagePopover.toggle(oEvent.getSource());
+		},
+
+		onPressAddDwarf: function(oEvent) {
+
+			var oDomainObservable = this.getView().getModel("domain").getObservable();
+
+			if (oDomainObservable.DwarfCount < 3) {
+				var oDwarf = models.createDwarf();
+				oDomainObservable.Dwarfs.push(oDwarf);
+			}
+		},
+
+		onPressRemoveDwarf: function(oEvent) {
+			
+			var oDomainObservable = this.getView().getModel("domain").getObservable();
+
+			if (oDomainObservable.DwarfCount > 0) {
+				--oDomainObservable.Dwarfs.length;
+			}
 		},
 
 		validateDomain: function() {

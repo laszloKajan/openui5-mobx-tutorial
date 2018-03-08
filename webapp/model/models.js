@@ -47,7 +47,7 @@ sap.ui.define([
 		return fMemFunc;
 	};
 
-	var fFilterValidationToMessage = function(oValidation){
+	var fFilterValidationToMessage = function(oValidation) {
 		return oValidation.valueState !== "None";
 	};
 	var fTransformValidation = __mobx.createTransformer(function(oValidation) {
@@ -153,6 +153,9 @@ sap.ui.define([
 					Age: undefined
 				},
 				Dwarfs: [],
+				get DwarfCount() {
+					return this.Dwarfs.length;
+				},
 				//
 				$ignoreChanged: false // If true, set $Validation.valueState regardless of $Changed state
 			});
@@ -160,6 +163,13 @@ sap.ui.define([
 			var oModel = new MobxModel(state);
 
 			return oModel;
+		},
+
+		createDwarf: function() {
+			return {
+				FirstName: "",
+				LastName: ""
+			};
 		},
 
 		/**
