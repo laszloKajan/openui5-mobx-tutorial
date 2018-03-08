@@ -146,6 +146,7 @@
 						<ToolbarSpacer/>
 						<Button id="btnAddDwarf" text="{i18n>addDwarf}" enabled="{= ${domain&gt;/DwarfCount} &lt; 3}" press="onPressAddDwarf"/>
 						<Button id="btnRemoveDwarf" text="{i18n>removeDwarf}" enabled="{= ${domain&gt;/DwarfCount} &gt; 0}" press="onPressRemoveDwarf"/>
+						<ToggleButton text="{i18n>revealValueStateText}" pressed="{domain&gt;/$ignoreChanged}" />
 						<Button id="btnSubmit" text="{i18n>submit}" enabled="{/canSubmit}" type="{= ${/canSubmit} ? 'Emphasized' : 'Default'}"/>
 					</Toolbar>
 				</footer>
