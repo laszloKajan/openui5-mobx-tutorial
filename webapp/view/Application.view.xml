@@ -25,8 +25,10 @@
 												valueStateText="{domain&gt;/SnowWhite/FirstName$Validation/valueStateText}"
 												change="onChangeSetChanged"/>
 											<Input id="inputSWLastName"
-												value="{path: 'domain&gt;/SnowWhite/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												change="onChangeRevalidate"/>
+												value="{path: 'domain&gt;/SnowWhite/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+												valueState="{domain&gt;/SnowWhite/LastName$Validation/valueState}"
+												valueStateText="{domain&gt;/SnowWhite/LastName$Validation/valueStateText}"
+												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement label="{i18n>inModel}">

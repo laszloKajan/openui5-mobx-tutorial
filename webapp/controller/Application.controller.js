@@ -122,7 +122,7 @@ sap.ui.define([
 				var bValid = true;
 
 				// Now reactive // bValid = bValid && this._validateInput("inputSWFirstName");
-				bValid = bValid && this._validateInput("inputSWLastName");
+				// Now reactive // bValid = bValid && this._validateInput("inputSWLastName");
 				bValid = bValid && this._validateInput("inputSWAge");
 
 				this.getView().getModel().setProperty("/validateDomainResult", bValid);
