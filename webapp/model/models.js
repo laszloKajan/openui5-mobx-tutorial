@@ -130,11 +130,13 @@ sap.ui.define([
 					get FirstName$Validation() {
 						return models.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
 					},
+					//
 					LastName: "",
 					LastName$Changed: false,
 					get LastName$Validation() {
 						return models.getModelPropertyValidationByType(this, "LastName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
 					},
+					//
 					get FullName() {
 						return (this.FirstName ? (this.FirstName + (this.LastName ? " " : "")) : "") + (this.LastName || "");
 					},
@@ -150,6 +152,7 @@ sap.ui.define([
 							valueStateText: bValid ? "" : "Enter at least either a correct first name or last name."
 						};
 					},
+					//
 					Age: undefined
 				},
 				Dwarfs: [],
@@ -160,8 +163,53 @@ sap.ui.define([
 				$ignoreChanged: false // If true, set $Validation.valueState regardless of $Changed state
 			});
 
-			var oModel = new MobxModel(state);
+			// Dwarf handling
+			__mobx.observe(state, "Dwarfs", function(change0) { // Returns a disposer
+				if (change0.type === "update") {
+					__mobx.intercept(state.Dwarfs, function(change) {
+						// New dwarf(s) added
+						if (change.type === "splice" && change.added.length) {
+							var oDwarfExtension = {
+								FirstName$Changed: false,
+								get FirstName$Validation() {
+									return models.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
+								},
+								//
+								LastName$Changed: false,
+								get LastName$Validation() {
+									return models.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
+								},
+								//
+								get FullName() {
+									return (this.FirstName ? (this.FirstName + (this.LastName ? " " : "")) : "") + (this.LastName || "");
+								},
+								get FullName$Changed() { // Indicates "changed by user"
+									return this.FirstName$Changed || this.LastName$Changed;
+								},
+								get FullName$Validation() {
+									var bValid = this.FirstName$Validation.valid && this.LastName$Validation.valid && Boolean(this.FullName);
+									return {
+										valid: bValid,
+										valueState: bValid ? "None" : (this.FullName$Changed || state.$ignoreChanged ? "Error" : "None"),
+										valueStateText: bValid ? "" : "Enter at least either a correct first name or last name."
+									};
+								}
+							};
 
+							for (var i = 0; i < change.added.length; ++i) {
+								if (!__mobx.isObservableObject(change.added[i])) {
+									change.added[i] = __mobx.observable(change.added[i]);
+								}
+								var oDwarf = change.added[i];
+								__mobx.extendObservable(oDwarf, oDwarfExtension);
+							}
+						}
+						return change;
+					});
+				}
+			}, true); // invokeImmediately
+
+			var oModel = new MobxModel(state);
 			return oModel;
 		},
 

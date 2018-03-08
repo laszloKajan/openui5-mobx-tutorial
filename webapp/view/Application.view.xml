@@ -66,8 +66,14 @@
 									</f:FormElement>
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 1}" label="{i18n>dwarf0}">
 										<f:fields>
-											<Input value="{path: 'domain&gt;/Dwarfs/0/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
-											<Input value="{path: 'domain&gt;/Dwarfs/0/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
+											<Input value="{path: 'domain&gt;/Dwarfs/0/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+												valueState="{= ${domain&gt;/Dwarfs/0/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/0/FullName$Validation/valueState} : ${domain&gt;/Dwarfs/0/LastName$Validation/valueState}}"
+												valueStateText="{= ${domain&gt;/Dwarfs/0/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/0/FullName$Validation/valueStateText} : ${domain&gt;/Dwarfs/0/LastName$Validation/valueStateText}}"
+												change="onChangeSetChanged"/>
+											<Input value="{path: 'domain&gt;/Dwarfs/0/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+												valueState="{= ${domain&gt;/Dwarfs/0/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/0/FullName$Validation/valueState} : ${domain&gt;/Dwarfs/0/LastName$Validation/valueState}}"
+												valueStateText="{= ${domain&gt;/Dwarfs/0/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/0/FullName$Validation/valueStateText} : ${domain&gt;/Dwarfs/0/LastName$Validation/valueStateText}}"
+												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 1}" label="{i18n>inModel}">
@@ -76,10 +82,14 @@
 											<Text text="`{domain&gt;/Dwarfs/0/LastName}'"/>
 										</f:fields>
 									</f:FormElement>
+									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 1}" label="">
+										<f:fields>
+											<Text text="`{domain&gt;/Dwarfs/0/FullName}'"/>
+										</f:fields>
+									</f:FormElement>
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 2}" label="{i18n>dwarf1}">
 										<f:fields>
-											<Input value="{path: 'domain&gt;/Dwarfs/1/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
-											<Input value="{path: 'domain&gt;/Dwarfs/1/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
+
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 2}" label="{i18n>inModel}">
@@ -90,8 +100,7 @@
 									</f:FormElement>
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 3}" label="{i18n>dwarf2}">
 										<f:fields>
-											<Input value="{path: 'domain&gt;/Dwarfs/2/FirstName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
-											<Input value="{path: 'domain&gt;/Dwarfs/2/LastName', type: 'sap.ui.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"/>
+
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 3}" label="{i18n>inModel}">
