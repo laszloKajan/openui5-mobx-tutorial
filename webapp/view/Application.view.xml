@@ -89,7 +89,14 @@
 									</f:FormElement>
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 2}" label="{i18n>dwarf1}">
 										<f:fields>
-
+											<Input value="{path: 'domain&gt;/Dwarfs/1/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+												valueState="{= ${domain&gt;/Dwarfs/1/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/1/FullName$Validation/valueState} : ${domain&gt;/Dwarfs/1/LastName$Validation/valueState}}"
+												valueStateText="{= ${domain&gt;/Dwarfs/1/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/1/FullName$Validation/valueStateText} : ${domain&gt;/Dwarfs/1/LastName$Validation/valueStateText}}"
+												change="onChangeSetChanged"/>
+											<Input value="{path: 'domain&gt;/Dwarfs/1/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+												valueState="{= ${domain&gt;/Dwarfs/1/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/1/FullName$Validation/valueState} : ${domain&gt;/Dwarfs/1/LastName$Validation/valueState}}"
+												valueStateText="{= ${domain&gt;/Dwarfs/1/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/1/FullName$Validation/valueStateText} : ${domain&gt;/Dwarfs/1/LastName$Validation/valueStateText}}"
+												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 2}" label="{i18n>inModel}">
@@ -98,15 +105,32 @@
 											<Text text="`{domain&gt;/Dwarfs/1/LastName}'"/>
 										</f:fields>
 									</f:FormElement>
+									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 2}" label="">
+										<f:fields>
+											<Text text="`{domain&gt;/Dwarfs/1/FullName}'"/>
+										</f:fields>
+									</f:FormElement>
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 3}" label="{i18n>dwarf2}">
 										<f:fields>
-
+											<Input value="{path: 'domain&gt;/Dwarfs/2/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+												valueState="{= ${domain&gt;/Dwarfs/2/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/2/FullName$Validation/valueState} : ${domain&gt;/Dwarfs/2/LastName$Validation/valueState}}"
+												valueStateText="{= ${domain&gt;/Dwarfs/2/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/2/FullName$Validation/valueStateText} : ${domain&gt;/Dwarfs/2/LastName$Validation/valueStateText}}"
+												change="onChangeSetChanged"/>
+											<Input value="{path: 'domain&gt;/Dwarfs/2/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+												valueState="{= ${domain&gt;/Dwarfs/2/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/2/FullName$Validation/valueState} : ${domain&gt;/Dwarfs/2/LastName$Validation/valueState}}"
+												valueStateText="{= ${domain&gt;/Dwarfs/2/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/2/FullName$Validation/valueStateText} : ${domain&gt;/Dwarfs/2/LastName$Validation/valueStateText}}"
+												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 3}" label="{i18n>inModel}">
 										<f:fields>
 											<Text text="`{domain&gt;/Dwarfs/2/FirstName}'"/>
 											<Text text="`{domain&gt;/Dwarfs/2/LastName}'"/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 3}" label="">
+										<f:fields>
+											<Text text="`{domain&gt;/Dwarfs/2/FullName}'"/>
 										</f:fields>
 									</f:FormElement>
 								</f:formElements>

@@ -177,7 +177,7 @@ sap.ui.define([
 								//
 								LastName$Changed: false,
 								get LastName$Validation() {
-									return models.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
+									return models.getModelPropertyValidationByType(this, "LastName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
 								},
 								//
 								get FullName() {
