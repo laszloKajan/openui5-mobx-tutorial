@@ -33,15 +33,17 @@ sap.ui.define([
 	return Controller.extend("org.debian.lkajan.mobxTutorial.controller.Application", {
 
 		onInit: function() {
+			
+			var that = this;
 
 			// Domain model
 			var oDomainModel = models.createDomainModel();
 			this.getView().setModel(oDomainModel, "domain");
-
+			
 			// Application model
 			var oAppModel = new MobxModel(__mobx.observable({
 				get canSubmit() {
-					return this.validateDomainResult && this.validationMessagesLength === 0;
+					return this.validateDomainResult && that.oObservableValidation.results.length === 0;
 				},
 				validateDomainResult: false,
 				validationMessages: [],
@@ -50,33 +52,49 @@ sap.ui.define([
 				}
 			}));
 			this.getView().setModel(oAppModel);
-
+			
 			// Message management
 			var oMessageManager = sap.ui.getCore().getMessageManager(),
 				oMessageProcessor = new ControlMessageProcessor();
 			oMessageManager.registerMessageProcessor(oMessageProcessor);
 			oMessageManager.registerObject(this.getView(), true); // Handle validation for this view
 
-			//	Merge messages from oMessageManager and oDomainModel
+			//	Flatten validation results
 			this.oObservableValidation = __mobx.observable({
-				Messages: [] // will be replaced by transformation to observable array
+				results: [] // will be replaced by transformation to observable array
 			});
 
-			//	Transform domain model to validation message array
-			this._fValidationAutorunDisposer = __mobx.reaction(
-				models.transformModelToValidationMessageArray.bind(this, oDomainModel.getObservable()),
-				function(aMessages) {
+			this.oObservableValidationMessages = __mobx.observable({
+				messages: []
+			});
+
+			//	Transform domain model to validation array
+			this._fAutorunDisposerObservableValidation = __mobx.reaction(
+				models.transformModelToValidationArray.bind(this, oDomainModel.getObservable()),
+				function(aValidationResults) {
 					// Consider debouncing
-					this.oObservableValidation.Messages = aMessages;
-				}.bind(this)
+					this.oObservableValidation.results = aValidationResults;
+				}.bind(this),
+				true // Fire immediately
+			);
+			
+			//	Transform validation array to validation message array
+			this._fAutorunDisposerObservableValidationMessages = __mobx.reaction(
+				models.transformValidationArrayToValidationMessages.bind(this, {source: this.oObservableValidation, validationArrayKey: "results"}),
+				function(aValidationMessages) {
+					// Consider debouncing
+					this.oObservableValidationMessages.messages = aValidationMessages;
+				}.bind(this),
+				true // Fire immediately
 			);
 
 			//	Merge messages when oDomainModel validation changes
-			__mobx.reaction(
+			this._fAutorunDisposerValidationArrayMerge = __mobx.reaction(
 				function() {
-					return this.oObservableValidation.Messages.peek();
+					return this.oObservableValidationMessages.messages.peek();
 				}.bind(this),
-				this._mergeMessageModelMessages.bind(this)
+				this._mergeMessageModelMessages.bind(this), // changes oAppModel
+				true // Fire immediately
 			);
 
 			//	Merge messages when oMessageManager validation changes
@@ -87,8 +105,9 @@ sap.ui.define([
 		},
 
 		onExit: function() {
-
-			this._fValidationAutorunDisposer();
+			this._fAutorunDisposerValidationArrayMerge();
+			this._fAutorunDisposerObservableValidationMessages();
+			this._fAutorunDisposerObservableValidation();
 			this._oMessageModelBinding.detachChange(this._mergeMessageModelMessages, this);
 			this._oMessageModelBinding.destroy();
 		},
@@ -137,7 +156,7 @@ sap.ui.define([
 			var oMessageManager = sap.ui.getCore().getMessageManager();
 
 			this.getView().getModel().getObservable().validationMessages =
-				oMessageManager.getMessageModel().getData().concat(this.oObservableValidation.Messages.peek());
+				oMessageManager.getMessageModel().getData().concat(this.oObservableValidationMessages.messages.peek());
 		},
 
 		_validateInput: function(sId) {

@@ -47,14 +47,18 @@ sap.ui.define([
 		return fMemFunc;
 	};
 
-	var fTransformValidationToMessage = __mobx.createTransformer(function(oValidation) {
-		return new Message({
-			message: oValidation.valueStateText.replace(/([{}])/g, "\\$1"),
-			type: oValidation.valueState,
-			validation: true
-		});
+	var fFilterValidationToMessage = function(oValidation){
+		return oValidation.valueState !== "None";
+	};
+	var fTransformValidation = __mobx.createTransformer(function(oValidation) {
+		return {
+			valid: oValidation.valid,
+			valueState: oValidation.valueState,
+			valueStateText: oValidation.valueStateText
+				// May add path and other properties
+		};
 	});
-	var fTransformModelToValMsgArray = function(__p) { // ({node: stateNode, path: "", acc: aAccumulator})
+	var fTransformModelToValidationArray = function(__p) { // ({node: stateNode, path: "", acc: aAccumulator})
 
 		var oNode = __p.node;
 		var oAcc = __p.acc;
@@ -73,9 +77,9 @@ sap.ui.define([
 
 				// console.log(__p.path + "/" + sKey + ": " + oValidation.valueState);
 
-				if (oValidation.valueState !== "None") {
-					var oMessage = fTransformValidationToMessage(oValidation);
-					poAcc.push(oMessage);
+				if (!oValidation.valid) {
+					var oValidationTransformed = fTransformValidation(oValidation);
+					poAcc.push(oValidationTransformed);
 				}
 			} else {
 				// Descend?
@@ -89,7 +93,7 @@ sap.ui.define([
 						if (!bIsObservableObject || Object.getOwnPropertyDescriptor(oNode, sKey).enumerable) { // Model calculated (get) properties become 'enumberable = false' while being made observable
 
 							var childNode = oNode[sKey];
-							fTransformModelToValMsgArray({
+							fTransformModelToValidationArray({
 								node: childNode,
 								path: __p.path + "/" + sKey,
 								acc: poAcc
@@ -103,6 +107,14 @@ sap.ui.define([
 		return oAcc;
 	};
 
+	var fTransformValidationToMessage = __mobx.createTransformer(function(oValidation) { // Current value, index, array
+		return new Message({
+			message: oValidation.valueStateText.replace(/([{}])/g, "\\$1"),
+			type: oValidation.valueState,
+			validation: true
+		});
+	});
+
 	var models = {
 		createDeviceModel: function() {
 			var oModel = new JSONModel(Device);
@@ -113,15 +125,30 @@ sap.ui.define([
 		createDomainModel: function() {
 			var state = __mobx.observable({
 				SnowWhite: {
-					FirstName: undefined,
+					FirstName: "",
 					FirstName$Changed: false,
 					get FirstName$Validation() {
 						return models.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
 					},
-					LastName: undefined,
+					LastName: "",
 					LastName$Changed: false,
 					get LastName$Validation() {
 						return models.getModelPropertyValidationByType(this, "LastName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
+					},
+					get FullName() {
+						return (this.FirstName ? (this.FirstName + (this.LastName ? " " : "")) : "") + (this.LastName || "");
+					},
+					get FullName$Changed() { // Indicates "changed by user"
+						return this.FirstName$Changed || this.LastName$Changed;
+					},
+					get FullName$Validation() {
+
+						var bValid = this.FirstName$Validation.valid && this.LastName$Validation.valid && Boolean(this.FullName);
+						return {
+							valid: bValid,
+							valueState: bValid ? "None" : (this.FullName$Changed || state.$ignoreChanged ? "Error" : "None"),
+							valueStateText: bValid ? "" : "Enter at least either a correct first name or last name."
+						};
 					},
 					Age: undefined
 				},
@@ -163,12 +190,18 @@ sap.ui.define([
 			return oRet;
 		},
 
-		transformModelToValidationMessageArray: __mobx.createTransformer(function(oSource) {
-			return fTransformModelToValMsgArray({
+		transformModelToValidationArray: __mobx.createTransformer(function(oSource) {
+			return fTransformModelToValidationArray({
 				node: oSource,
 				path: "",
 				acc: []
 			});
+		}),
+
+		transformValidationArrayToValidationMessages: __mobx.createTransformer(function(__p) { // {source, validationArrayKey}
+			var oSource = __p.source,
+				sKey = __p.validationArrayKey;
+			return oSource[sKey].filter(fFilterValidationToMessage).map(fTransformValidationToMessage);
 		}),
 
 		_transformModelPropertyToValidationByType: _memoize(function(oSource) { // Memoize
