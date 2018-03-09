@@ -72,7 +72,9 @@ sap.ui.define([
 			this._fAutorunDisposerObservableValidation = __mobx.reaction(
 				models.transformModelToValidationArray.bind(this, oDomainModel.getObservable()),
 				function(aValidationResults) {
-					// Consider debouncing
+					// // Don't reassign results, that breaks MobX tracking. Change array contents instead.
+					// this.oObservableValidation.results.length = 0;
+					// Array.prototype.push.apply(this.oObservableValidation.results, aValidationResults);
 					this.oObservableValidation.results = aValidationResults;
 				}.bind(this),
 				true // Fire immediately
@@ -80,12 +82,10 @@ sap.ui.define([
 
 			//	Transform validation array to validation message array
 			this._fAutorunDisposerObservableValidationMessages = __mobx.reaction(
-				models.transformValidationArrayToValidationMessages.bind(this, {
-					source: this.oObservableValidation,
-					validationArrayKey: "results"
-				}),
+				function() {
+					return models.transformValidationArrayToValidationMessages(this.oObservableValidation.results);
+				}.bind(this),
 				function(aValidationMessages) {
-					// Consider debouncing
 					this.oObservableValidationMessages.messages = aValidationMessages;
 				}.bind(this),
 				true // Fire immediately

@@ -71,9 +71,7 @@ sap.ui.define([
 		};
 	});
 	var fTransformModelToValidationArray = __mobx.createTransformer(function(__p) { // ({node: stateNode, path: ""})
-		// var fTransformModelToValidationArray = (function(__p) { // ({node: stateNode, path: ""})
-
-		console.log("fTransformModelToValidationArray" + " " + __p.path); // TODO: removeme
+		// var fTransformModelToValidationArray = (function(__p) { // ({node: stateNode, path: ""}) // TODO: removeme
 
 		var oNode = __p.node;
 		var bIsObservableObject = __mobx.isObservableObject(oNode);
@@ -115,6 +113,8 @@ sap.ui.define([
 			}
 			return poAcc;
 		}, []);
+
+		console.log("fTransformModelToValidationArray" + " " + __p.path); // TODO: removeme
 
 		return oAcc;
 	}, function(result, value) {
@@ -268,10 +268,11 @@ sap.ui.define([
 			return fTransformModelToValidationArray(oNodePath);
 		}),
 
-		transformValidationArrayToValidationMessages: __mobx.createTransformer(function(__p) { // {source, validationArrayKey}
-			var oSource = __p.source,
-				sKey = __p.validationArrayKey;
-			return oSource[sKey].filter(fFilterValidationToMessage).map(fTransformValidationToMessage);
+		transformValidationArrayToValidationMessages: __mobx.createTransformer(function(aSource) {
+			
+			console.log("transformValidationArrayToValidationMessages");
+			
+			return aSource.filter(fFilterValidationToMessage).map(fTransformValidationToMessage);
 		}),
 
 		_transformModelPropertyToValidationByType: _memoize(function(oSource) { // Memoize
