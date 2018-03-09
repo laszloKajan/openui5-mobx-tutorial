@@ -16,6 +16,18 @@ sap.ui.define([
 		search: /^(|[^0-9\s]{3,})$/
 	});
 
+	var oNodePathMemory = {};
+	var _getChildNodePathObject = function(oNode, sPath) {
+		var oNodePath = oNodePathMemory[sPath];
+		if (!oNodePath) {
+			oNodePathMemory[sPath] = oNodePath = {
+				node: oNode,
+				path: sPath
+			};
+		}
+		return oNodePath;
+	};
+
 	var oValidationMemory = {};
 	var _memoize = function(fFunc) { // Consider something cleverer
 		var fMemFunc = function() {
@@ -24,7 +36,7 @@ sap.ui.define([
 			if (oValidationMemory.hasOwnProperty(sKey)) {
 				jQuery.sap.clearDelayedCall(oValidationMemory[sKey].sDelayedCallId);
 				oValidationMemory[sKey].sDelayedCallId = jQuery.sap.delayedCall(333,
-					this, // Object from which the method should be called, will be 'this' in callback (without binding)
+					null, // Object from which the method should be called, will be 'this' in callback (without binding)
 					function() {
 						delete oValidationMemory[sKey];
 					});
@@ -35,7 +47,7 @@ sap.ui.define([
 				oValidationMemory[sKey] = {
 					value: oRet,
 					sDelayedCallId: jQuery.sap.delayedCall(333,
-						this, // Object from which the method should be called, will be 'this' in callback (without binding)
+						null, // Object from which the method should be called, will be 'this' in callback (without binding)
 						function() {
 							delete oValidationMemory[sKey];
 						})
@@ -58,14 +70,16 @@ sap.ui.define([
 				// May add path and other properties
 		};
 	});
-	var fTransformModelToValidationArray = function(__p) { // ({node: stateNode, path: "", acc: aAccumulator})
+	var fTransformModelToValidationArray = __mobx.createTransformer(function(__p) { // ({node: stateNode, path: ""})
+		// var fTransformModelToValidationArray = (function(__p) { // ({node: stateNode, path: ""})
+
+		console.log("fTransformModelToValidationArray" + " " + __p.path); // TODO: removeme
 
 		var oNode = __p.node;
-		var oAcc = __p.acc;
 		var bIsObservableObject = __mobx.isObservableObject(oNode);
 		var aKeys = __mobx.isObservableArray(oNode) ? Object.keys(oNode.peek()) : Object.getOwnPropertyNames(oNode); // We need get() properties too, but ...
 
-		aKeys.filter(function(sKey) {
+		var oAcc = aKeys.filter(function(sKey) {
 			return sKey.indexOf("$") === -1;
 		}).reduce(function(poAcc, sKey) {
 
@@ -74,8 +88,6 @@ sap.ui.define([
 			if (oNode.hasOwnProperty(sValLeafKey)) {
 
 				var oValidation = oNode[sValLeafKey];
-
-				// console.log(__p.path + "/" + sKey + ": " + oValidation.valueState);
 
 				if (!oValidation.valid) {
 					var oValidationTransformed = fTransformValidation(oValidation);
@@ -92,20 +104,23 @@ sap.ui.define([
 					default:
 						if (!bIsObservableObject || Object.getOwnPropertyDescriptor(oNode, sKey).enumerable) { // Model calculated (get) properties become 'enumberable = false' while being made observable
 
-							var childNode = oNode[sKey];
-							fTransformModelToValidationArray({
-								node: childNode,
-								path: __p.path + "/" + sKey,
-								acc: poAcc
-							});
+							var sChildPath = __p.path + "/" + sKey;
+							var oChildNode = oNode[sKey];
+							var oChildNodePath = _getChildNodePathObject(oChildNode, sChildPath);
+
+							var aChildRes = fTransformModelToValidationArray(oChildNodePath);
+							Array.prototype.push.apply(poAcc, aChildRes);
 						}
 				}
 			}
-			return oAcc;
-		}, oAcc);
+			return poAcc;
+		}, []);
 
 		return oAcc;
-	};
+	}, function(result, value) {
+		// Cleanup
+		delete oNodePathMemory[value.path];
+	});
 
 	var fTransformValidationToMessage = __mobx.createTransformer(function(oValidation) { // Current value, index, array
 		return new Message({
@@ -249,11 +264,8 @@ sap.ui.define([
 		},
 
 		transformModelToValidationArray: __mobx.createTransformer(function(oSource) {
-			return fTransformModelToValidationArray({
-				node: oSource,
-				path: "",
-				acc: []
-			});
+			var oNodePath = _getChildNodePathObject(oSource, "");
+			return fTransformModelToValidationArray(oNodePath);
 		}),
 
 		transformValidationArrayToValidationMessages: __mobx.createTransformer(function(__p) { // {source, validationArrayKey}
@@ -268,14 +280,15 @@ sap.ui.define([
 				throw new Error("Invalid function call");
 			}
 
-			var value = oSource.value;
+			// console.log("_transformModelPropertyToValidationByType");
+
 			var oRet = {
 				valid: true,
 				valueStateText: ""
 			};
 
 			try {
-				var parsedValue = oSource.oType.parseValue(value, oSource.sInternalType, true);
+				var parsedValue = oSource.oType.parseValue(oSource.value, oSource.sInternalType, true);
 				oSource.oType.validateValue(parsedValue, true);
 			} catch (oException) {
 				if (oException instanceof ParseException || oException instanceof ValidateException) {
