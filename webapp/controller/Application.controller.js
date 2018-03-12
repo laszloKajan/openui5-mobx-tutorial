@@ -159,6 +159,22 @@ sap.ui.define([
 			}
 		},
 
+		formatterValueStateFieldPair: function(val1, val2) {
+			if (val1) {
+				return val1.valid ? val2.valueState : val1.valueState;
+			} else {
+				return "None"; // When the model is not yet assigned, we get val1 === null
+			}
+		},
+
+		formatterValueStateTextFieldPair: function(val1, val2) {
+			if (val1) {
+				return val1.valid ? val2.valueStateText : val1.valueStateText;
+			} else {
+				return "None"; // When the model is not yet assigned, we get val1 === null
+			}
+		},
+
 		validateDomain: function() {
 
 			try {

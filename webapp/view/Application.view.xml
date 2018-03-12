@@ -21,13 +21,13 @@
 										<f:fields>
 											<Input id="inputSWFirstName"
 												value="{path: 'domain&gt;/SnowWhite/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{= ${domain&gt;/SnowWhite/FirstName$Validation/valid} ? ${domain&gt;/SnowWhite/FullName$Validation/valueState} : ${domain&gt;/SnowWhite/FirstName$Validation/valueState}}"
-												valueStateText="{= ${domain&gt;/SnowWhite/FirstName$Validation/valid} ? ${domain&gt;/SnowWhite/FullName$Validation/valueStateText} : ${domain&gt;/SnowWhite/FirstName$Validation/valueStateText}}"
+												valueState="{parts: ['domain&gt;/SnowWhite/FirstName$Validation', 'domain&gt;/SnowWhite/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
+												valueStateText="{parts: ['domain&gt;/SnowWhite/FirstName$Validation', 'domain&gt;/SnowWhite/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
 												change="onChangeSetChanged"/>
 											<Input id="inputSWLastName"
 												value="{path: 'domain&gt;/SnowWhite/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{= ${domain&gt;/SnowWhite/LastName$Validation/valid} ? ${domain&gt;/SnowWhite/FullName$Validation/valueState} : ${domain&gt;/SnowWhite/LastName$Validation/valueState}}"
-												valueStateText="{= ${domain&gt;/SnowWhite/LastName$Validation/valid} ? ${domain&gt;/SnowWhite/FullName$Validation/valueStateText} : ${domain&gt;/SnowWhite/LastName$Validation/valueStateText}}"
+												valueState="{parts: ['domain&gt;/SnowWhite/LastName$Validation', 'domain&gt;/SnowWhite/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
+												valueStateText="{parts: ['domain&gt;/SnowWhite/LastName$Validation', 'domain&gt;/SnowWhite/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
@@ -35,8 +35,8 @@
 										<f:fields>
 											<Input
 												value="{path: 'domain&gt;/SnowWhite/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.StringWithApple', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{= ${domain&gt;/SnowWhite/FirstName$WithApple$Validation/valid} ? ${domain&gt;/SnowWhite/FullName$Validation/valueState} : ${domain&gt;/SnowWhite/FirstName$WithApple$Validation/valueState}}"
-												valueStateText="{= ${domain&gt;/SnowWhite/FirstName$WithApple$Validation/valid} ? ${domain&gt;/SnowWhite/FullName$Validation/valueStateText} : ${domain&gt;/SnowWhite/FirstName$WithApple$Validation/valueStateText}}"
+												valueState="{parts: ['domain&gt;/SnowWhite/FirstName$WithApple$Validation', 'domain&gt;/SnowWhite/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
+												valueStateText="{parts: ['domain&gt;/SnowWhite/FirstName$WithApple$Validation', 'domain&gt;/SnowWhite/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
@@ -76,12 +76,12 @@
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 1}" label="{i18n>dwarf0}">
 										<f:fields>
 											<Input value="{path: 'domain&gt;/Dwarfs/0/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{= ${domain&gt;/Dwarfs/0/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/0/FullName$Validation/valueState} : ${domain&gt;/Dwarfs/0/LastName$Validation/valueState}}"
-												valueStateText="{= ${domain&gt;/Dwarfs/0/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/0/FullName$Validation/valueStateText} : ${domain&gt;/Dwarfs/0/LastName$Validation/valueStateText}}"
+												valueState="{parts: ['domain&gt;/Dwarfs/0/FirstName$Validation', 'domain&gt;/Dwarfs/0/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
+												valueStateText="{parts: ['domain&gt;/Dwarfs/0/FirstName$Validation', 'domain&gt;/Dwarfs/0/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
 												change="onChangeSetChanged"/>
 											<Input value="{path: 'domain&gt;/Dwarfs/0/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{= ${domain&gt;/Dwarfs/0/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/0/FullName$Validation/valueState} : ${domain&gt;/Dwarfs/0/LastName$Validation/valueState}}"
-												valueStateText="{= ${domain&gt;/Dwarfs/0/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/0/FullName$Validation/valueStateText} : ${domain&gt;/Dwarfs/0/LastName$Validation/valueStateText}}"
+												valueState="{parts: ['domain&gt;/Dwarfs/0/LastName$Validation', 'domain&gt;/Dwarfs/0/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
+												valueStateText="{parts: ['domain&gt;/Dwarfs/0/LastName$Validation', 'domain&gt;/Dwarfs/0/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
@@ -99,12 +99,12 @@
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 2}" label="{i18n>dwarf1}">
 										<f:fields>
 											<Input value="{path: 'domain&gt;/Dwarfs/1/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{= ${domain&gt;/Dwarfs/1/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/1/FullName$Validation/valueState} : ${domain&gt;/Dwarfs/1/LastName$Validation/valueState}}"
-												valueStateText="{= ${domain&gt;/Dwarfs/1/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/1/FullName$Validation/valueStateText} : ${domain&gt;/Dwarfs/1/LastName$Validation/valueStateText}}"
+												valueState="{parts: ['domain&gt;/Dwarfs/1/FirstName$Validation', 'domain&gt;/Dwarfs/1/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
+												valueStateText="{parts: ['domain&gt;/Dwarfs/1/FirstName$Validation', 'domain&gt;/Dwarfs/1/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
 												change="onChangeSetChanged"/>
 											<Input value="{path: 'domain&gt;/Dwarfs/1/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{= ${domain&gt;/Dwarfs/1/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/1/FullName$Validation/valueState} : ${domain&gt;/Dwarfs/1/LastName$Validation/valueState}}"
-												valueStateText="{= ${domain&gt;/Dwarfs/1/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/1/FullName$Validation/valueStateText} : ${domain&gt;/Dwarfs/1/LastName$Validation/valueStateText}}"
+												valueState="{parts: ['domain&gt;/Dwarfs/1/LastName$Validation', 'domain&gt;/Dwarfs/1/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
+												valueStateText="{parts: ['domain&gt;/Dwarfs/1/LastName$Validation', 'domain&gt;/Dwarfs/1/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
@@ -122,12 +122,12 @@
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 3}" label="{i18n>dwarf2}">
 										<f:fields>
 											<Input value="{path: 'domain&gt;/Dwarfs/2/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{= ${domain&gt;/Dwarfs/2/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/2/FullName$Validation/valueState} : ${domain&gt;/Dwarfs/2/LastName$Validation/valueState}}"
-												valueStateText="{= ${domain&gt;/Dwarfs/2/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/2/FullName$Validation/valueStateText} : ${domain&gt;/Dwarfs/2/LastName$Validation/valueStateText}}"
+												valueState="{parts: ['domain&gt;/Dwarfs/2/FirstName$Validation', 'domain&gt;/Dwarfs/2/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
+												valueStateText="{parts: ['domain&gt;/Dwarfs/2/FirstName$Validation', 'domain&gt;/Dwarfs/2/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
 												change="onChangeSetChanged"/>
 											<Input value="{path: 'domain&gt;/Dwarfs/2/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{= ${domain&gt;/Dwarfs/2/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/2/FullName$Validation/valueState} : ${domain&gt;/Dwarfs/2/LastName$Validation/valueState}}"
-												valueStateText="{= ${domain&gt;/Dwarfs/2/LastName$Validation/valid} ? ${domain&gt;/Dwarfs/2/FullName$Validation/valueStateText} : ${domain&gt;/Dwarfs/2/LastName$Validation/valueStateText}}"
+												valueState="{parts: ['domain&gt;/Dwarfs/2/LastName$Validation', 'domain&gt;/Dwarfs/2/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
+												valueStateText="{parts: ['domain&gt;/Dwarfs/2/LastName$Validation', 'domain&gt;/Dwarfs/2/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
