@@ -31,6 +31,15 @@
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
+									<f:FormElement label="{i18n>firstNameWithApple}">
+										<f:fields>
+											<Input
+												value="{path: 'domain&gt;/SnowWhite/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.StringWithApple', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+												valueState="{= ${domain&gt;/SnowWhite/FirstName$WithApple$Validation/valid} ? ${domain&gt;/SnowWhite/FullName$Validation/valueState} : ${domain&gt;/SnowWhite/FirstName$WithApple$Validation/valueState}}"
+												valueStateText="{= ${domain&gt;/SnowWhite/FirstName$WithApple$Validation/valid} ? ${domain&gt;/SnowWhite/FullName$Validation/valueStateText} : ${domain&gt;/SnowWhite/FirstName$WithApple$Validation/valueStateText}}"
+												change="onChangeSetChanged"/>
+										</f:fields>
+									</f:FormElement>
 									<f:FormElement label="{i18n>inModel}">
 										<f:fields>
 											<Text text="`{domain&gt;/SnowWhite/FirstName}'"/>

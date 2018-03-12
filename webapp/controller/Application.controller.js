@@ -37,7 +37,9 @@ sap.ui.define([
 			var that = this;
 
 			// Domain model
-			var oDomainModel = models.createDomainModel();
+			var oDomainModel = models.createDomainModel(
+				this.getOwnerComponent().getModel("i18n").getResourceBundle()
+			);
 			this.getView().setModel(oDomainModel, "domain");
 
 			// Application model
@@ -149,7 +151,7 @@ sap.ui.define([
 		},
 
 		onPressRemoveDwarf: function(oEvent) {
-			
+
 			var oDomainObservable = this.getView().getModel("domain").getObservable();
 
 			if (oDomainObservable.DwarfCount > 0) {

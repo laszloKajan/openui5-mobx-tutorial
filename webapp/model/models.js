@@ -4,15 +4,23 @@ sap.ui.define([
 	"org/js/mobx/3.5.1/mobx.umd.min",
 	"sap/ui/mobx/MobxModel",
 	"sap/ui/model/type/String",
-	"org/debian/lkajan/mobxTutorial/model/type/Generator",
+	"org/debian/lkajan/mobxTutorial/model/type/raw/StringWithApple",
+	"org/debian/lkajan/mobxTutorial/model/type/Factory",
 	"sap/ui/model/ParseException",
 	"sap/ui/model/ValidateException",
 	"sap/ui/core/message/Message"
-], function(JSONModel, Device, __mobx, MobxModel, String, MobxModelTypeGenerator, ParseException, ValidateException, Message) {
+], function(JSONModel, Device, __mobx, MobxModel, String, RawStringWithApple, MobxModelTypeFactory, ParseException, ValidateException,
+	Message) {
 	"use strict";
 
-	var MobxModelTypeString = MobxModelTypeGenerator.getExtendedType(String, "String");
+	var MobxModelTypeString = MobxModelTypeFactory.getExtendedType(String, "org.debian.lkajan.mobxTutorial.model.type.String");
 	var oMobxModelTypeStringName = new MobxModelTypeString({}, {
+		search: /^(|[^0-9\s]{3,})$/
+	});
+
+	var MobxModelTypeStringWithApple = MobxModelTypeFactory.getExtendedType(RawStringWithApple,
+		"org.debian.lkajan.mobxTutorial.model.type.StringWithApple");
+	var oMobxModelTypeStringWithApple = new MobxModelTypeStringWithApple({}, {
 		search: /^(|[^0-9\s]{3,})$/
 	});
 
@@ -28,14 +36,21 @@ sap.ui.define([
 		return oNodePath;
 	};
 
-	var oValidationMemory = {};
 	var _memoize = function(fFunc) { // Consider something cleverer
+		var oValidationMemory = {};
+		var iValidationMemoryTimeout = 777;
 		var fMemFunc = function() {
-			var sKey = JSON.stringify(arguments); // Well, we should hash this really
+			var sKey = JSON.stringify(arguments, function(key, value) {
+				if (value instanceof RegExp) {
+					return value.toString();
+				} else {
+					return value;
+				}
+			}); // Well, we should hash this really
 
 			if (oValidationMemory.hasOwnProperty(sKey)) {
 				jQuery.sap.clearDelayedCall(oValidationMemory[sKey].sDelayedCallId);
-				oValidationMemory[sKey].sDelayedCallId = jQuery.sap.delayedCall(333,
+				oValidationMemory[sKey].sDelayedCallId = jQuery.sap.delayedCall(iValidationMemoryTimeout,
 					null, // Object from which the method should be called, will be 'this' in callback (without binding)
 					function() {
 						delete oValidationMemory[sKey];
@@ -46,7 +61,7 @@ sap.ui.define([
 				var oRet = fFunc.apply(this, arguments);
 				oValidationMemory[sKey] = {
 					value: oRet,
-					sDelayedCallId: jQuery.sap.delayedCall(333,
+					sDelayedCallId: jQuery.sap.delayedCall(iValidationMemoryTimeout,
 						null, // Object from which the method should be called, will be 'this' in callback (without binding)
 						function() {
 							delete oValidationMemory[sKey];
@@ -114,7 +129,7 @@ sap.ui.define([
 			return poAcc;
 		}, []);
 
-		console.log("fTransformModelToValidationArray" + " " + __p.path); // TODO: removeme
+		// console.log("fTransformModelToValidationArray" + " " + __p.path);
 
 		return oAcc;
 	}, function(result, value) {
@@ -137,7 +152,7 @@ sap.ui.define([
 			return oModel;
 		},
 
-		createDomainModel: function() {
+		createDomainModel: function(oI18nResourceBundle) {
 			var state = __mobx.observable({
 				SnowWhite: {
 					FirstName: "",
@@ -145,7 +160,10 @@ sap.ui.define([
 					get FirstName$Validation() {
 						return models.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
 					},
-					//
+					get FirstName$WithApple$Validation() {
+						return models.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringWithApple, "string", state.$ignoreChanged);
+					},
+
 					LastName: "",
 					LastName$Changed: false,
 					get LastName$Validation() {
@@ -164,7 +182,7 @@ sap.ui.define([
 						return {
 							valid: bValid,
 							valueState: bValid ? "None" : (this.FullName$Changed || state.$ignoreChanged ? "Error" : "None"),
-							valueStateText: bValid ? "" : "Enter at least either a correct first name or last name."
+							valueStateText: bValid ? "" : oI18nResourceBundle.getText("atLeastCorrectFirstOrLast")
 						};
 					},
 					//
@@ -206,7 +224,7 @@ sap.ui.define([
 									return {
 										valid: bValid,
 										valueState: bValid ? "None" : (this.FullName$Changed || state.$ignoreChanged ? "Error" : "None"),
-										valueStateText: bValid ? "" : "Enter at least either a correct first name or last name."
+										valueStateText: bValid ? "" : oI18nResourceBundle.getText("atLeastCorrectFirstOrLast")
 									};
 								}
 							};
@@ -269,14 +287,14 @@ sap.ui.define([
 		}),
 
 		transformValidationArrayToValidationMessages: __mobx.createTransformer(function(aSource) {
-			
-			console.log("transformValidationArrayToValidationMessages");
-			
+
+			// console.log("transformValidationArrayToValidationMessages");
+
 			return aSource.filter(fFilterValidationToMessage).map(fTransformValidationToMessage);
 		}),
 
-		_transformModelPropertyToValidationByType: _memoize(function(oSource) { // Memoize
-
+		_transformModelPropertyToValidationByType: _memoize(function(oSource) { // {value, oType, sInternalType}
+			//																		Is memoization really worth it here?
 			if (!oSource.oType || !oSource.sInternalType) {
 				throw new Error("Invalid function call");
 			}

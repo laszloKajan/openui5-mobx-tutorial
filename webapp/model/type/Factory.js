@@ -6,7 +6,12 @@ sap.ui.define([
 
 	return {
 		getExtendedType: function(BaseType, sNewTypeName) {
-			return BaseType.extend("org.debian.lkajan.mobxTutorial.model.type." + sNewTypeName, {
+			return BaseType.extend(sNewTypeName, {
+				constructor: function() {
+					BaseType.prototype.constructor.apply(this, arguments);
+					this.sNameSubtype = sNewTypeName; // C.f. this.sName
+				},
+				
 				formatValue: function(value, sInternalType) {
 					try {
 						// Don't format it if it can't be parsed
