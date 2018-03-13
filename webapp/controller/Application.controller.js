@@ -10,9 +10,10 @@ sap.ui.define([
 	"sap/ui/model/ListBinding",
 	"org/debian/lkajan/mobxTutorial/model/models",
 	"org/js/mobx/3.5.1/mobx.umd.min",
-	"sap/ui/mobx/MobxModel"
+	"sap/ui/mobx/MobxModel",
+	"org/debian/lkajan/mobxTutorial/model/MobxModel/Validation"
 ], function(MessagePopover, MessagePopoverItem, Controller, JSONModel, ControlMessageProcessor, TypeString, ParseException,
-	ValidateException, ListBinding, models, __mobx, MobxModel) {
+	ValidateException, ListBinding, models, __mobx, MobxModel, Validation) {
 	"use strict";
 
 	var oMessageTemplate = new MessagePopoverItem({
@@ -72,7 +73,7 @@ sap.ui.define([
 
 			//	Transform domain model to validation array
 			this._fAutorunDisposerObservableValidation = __mobx.reaction(
-				models.transformModelToValidationArray.bind(this, oDomainModel.getObservable()),
+				Validation.transformModelToValidationArray.bind(this, oDomainModel.getObservable()),
 				function(aValidationResults) {
 					// // Don't reassign results, that breaks MobX tracking. Change array contents instead.
 					// this.oObservableValidation.results.length = 0;
@@ -85,7 +86,7 @@ sap.ui.define([
 			//	Transform validation array to validation message array
 			this._fAutorunDisposerObservableValidationMessages = __mobx.reaction(
 				function() {
-					return models.transformValidationArrayToValidationMessages(this.oObservableValidation.results);
+					return Validation.transformValidationArrayToValidationMessages(this.oObservableValidation.results);
 				}.bind(this),
 				function(aValidationMessages) {
 					this.oObservableValidationMessages.messages = aValidationMessages;
