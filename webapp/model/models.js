@@ -24,11 +24,11 @@ sap.ui.define([
 		search: /^(|[^0-9\s]{3,})$/
 	});
 
-	var oNodePathMemory = {};
-	var _getChildNodePathObject = function(oNode, sPath) {
-		var oNodePath = oNodePathMemory[sPath];
+	var oCacheForNodePath = {};
+	var _fGetNodePathObject = function(oNode, sPath) {
+		var oNodePath = oCacheForNodePath[sPath];
 		if (!oNodePath) {
-			oNodePathMemory[sPath] = oNodePath = {
+			oCacheForNodePath[sPath] = oNodePath = {
 				node: oNode,
 				path: sPath
 			};
@@ -36,42 +36,61 @@ sap.ui.define([
 		return oNodePath;
 	};
 
-	var _memoize = function(fFunc) { // Consider something cleverer
-		var oValidationMemory = {};
-		var iValidationMemoryTimeout = 777;
-		var fMemFunc = function() {
-			var sKey = JSON.stringify(arguments, function(key, value) {
-				if (value instanceof RegExp) {
-					return value.toString();
-				} else {
-					return value;
-				}
-			}); // Well, we should hash this really
-
-			if (oValidationMemory.hasOwnProperty(sKey)) {
-				jQuery.sap.clearDelayedCall(oValidationMemory[sKey].sDelayedCallId);
-				oValidationMemory[sKey].sDelayedCallId = jQuery.sap.delayedCall(iValidationMemoryTimeout,
-					null, // Object from which the method should be called, will be 'this' in callback (without binding)
-					function() {
-						delete oValidationMemory[sKey];
-					});
-
-				return JSON.parse(JSON.stringify(oValidationMemory[sKey].value));
+	var _fGetKeyForArguments = function() { // Well, we should use hashing really
+		return JSON.stringify(arguments, function(key, value) {
+			if (value instanceof RegExp) {
+				return value.toString();
 			} else {
-				var oRet = fFunc.apply(this, arguments);
-				oValidationMemory[sKey] = {
-					value: oRet,
-					sDelayedCallId: jQuery.sap.delayedCall(iValidationMemoryTimeout,
-						null, // Object from which the method should be called, will be 'this' in callback (without binding)
-						function() {
-							delete oValidationMemory[sKey];
-						})
-				};
-
-				return JSON.parse(JSON.stringify(oRet));
+				return value;
 			}
-		};
-		return fMemFunc;
+		});
+	};
+
+	var oCacheForValueType = {};
+	var _fGetValueTypeObject = function(value, oType, sInternalType) {
+		var sKey = _fGetKeyForArguments.apply(this, arguments);
+		var oValueType = oCacheForValueType[sKey];
+		if (!oValueType) {
+			oCacheForValueType[sKey] = oValueType = {
+				value: value,
+				oType: oType,
+				sInternalType: sInternalType
+			};
+		}
+		return oValueType;
+	};
+	var _fTransformModelPropertyToValidationByTypeMobX = __mobx.createTransformer(
+		function(oSource) { // {value, oType, sInternalType}
+			//					Is memoization really worth it here?
+			if (!oSource.oType || !oSource.sInternalType) {
+				throw new Error("Invalid function call");
+			}
+			// console.log("_fTransformModelPropertyToValidationByTypeMobX");
+			var oRet = {
+				valid: true,
+				valueStateText: ""
+			};
+
+			try {
+				var parsedValue = oSource.oType.parseValue(oSource.value, oSource.sInternalType, true);
+				oSource.oType.validateValue(parsedValue, true);
+			} catch (oException) {
+				if (oException instanceof ParseException || oException instanceof ValidateException) {
+					oRet.valid = false;
+					oRet.valueStateText = oException.message;
+				} else {
+					throw oException;
+				}
+			}
+			return oRet;
+		},
+		function(result, oSource) {
+			// Cleanup
+			delete oCacheForValueType[_fGetKeyForArguments(oSource.value, oSource.oType, oSource.sInternalType)];
+		});
+	var _fTransformModelPropertyToValidationByType = function(value, oType, sInternalType) {
+		var oSource = _fGetValueTypeObject(value, oType, sInternalType);
+		return _fTransformModelPropertyToValidationByTypeMobX(oSource);
 	};
 
 	var fFilterValidationToMessage = function(oValidation) {
@@ -85,57 +104,61 @@ sap.ui.define([
 				// May add path and other properties
 		};
 	});
-	var fTransformModelToValidationArray = __mobx.createTransformer(function(__p) { // ({node: stateNode, path: ""})
-		// var fTransformModelToValidationArray = (function(__p) { // ({node: stateNode, path: ""}) // TODO: removeme
+	var fTransformModelToValidationArray;
+	var _fTransformModelToValidationArrayMobX = __mobx.createTransformer(
+		function(__p) { // ({node: stateNode, path: ""})
 
-		var oNode = __p.node;
-		var bIsObservableObject = __mobx.isObservableObject(oNode);
-		var aKeys = __mobx.isObservableArray(oNode) ? Object.keys(oNode.peek()) : Object.getOwnPropertyNames(oNode); // We need get() properties too, but ...
+			var oNode = __p.node;
+			var bIsObservableObject = __mobx.isObservableObject(oNode);
+			var aKeys = __mobx.isObservableArray(oNode) ? Object.keys(oNode.peek()) : Object.getOwnPropertyNames(oNode); // We need get() properties too, but ...
 
-		var oAcc = aKeys.filter(function(sKey) {
-			return sKey.indexOf("$") === -1;
-		}).reduce(function(poAcc, sKey) {
+			var oAcc = aKeys.filter(function(sKey) {
+				return sKey.indexOf("$") === -1;
+			}).reduce(function(poAcc, sKey) {
 
-			var sValLeafKey = sKey + "$Validation";
+				var sValLeafKey = sKey + "$Validation";
 
-			if (oNode.hasOwnProperty(sValLeafKey)) {
+				if (oNode.hasOwnProperty(sValLeafKey)) {
 
-				var oValidation = oNode[sValLeafKey];
+					var oValidation = oNode[sValLeafKey];
 
-				if (!oValidation.valid) {
-					var oValidationTransformed = fTransformValidation(oValidation);
-					poAcc.push(oValidationTransformed);
+					if (!oValidation.valid) {
+						var oValidationTransformed = fTransformValidation(oValidation);
+						poAcc.push(oValidationTransformed);
+					}
+				} else {
+					// Descend?
+					switch (typeof(oNode[sKey])) {
+						case "boolean":
+						case "number":
+						case "string":
+						case "undefined":
+							break;
+						default:
+							if (!bIsObservableObject || Object.getOwnPropertyDescriptor(oNode, sKey).enumerable) { // Model calculated (get) properties become 'enumberable = false' while being made observable
+
+								var sChildPath = __p.path + "/" + sKey;
+								var oChildNode = oNode[sKey];
+								var aChildRes = fTransformModelToValidationArray(oChildNode, sChildPath);
+								Array.prototype.push.apply(poAcc, aChildRes);
+							}
+					}
 				}
-			} else {
-				// Descend?
-				switch (typeof(oNode[sKey])) {
-					case "boolean":
-					case "number":
-					case "string":
-					case "undefined":
-						break;
-					default:
-						if (!bIsObservableObject || Object.getOwnPropertyDescriptor(oNode, sKey).enumerable) { // Model calculated (get) properties become 'enumberable = false' while being made observable
+				return poAcc;
+			}, []);
 
-							var sChildPath = __p.path + "/" + sKey;
-							var oChildNode = oNode[sKey];
-							var oChildNodePath = _getChildNodePathObject(oChildNode, sChildPath);
+			// console.log("fTransformModelToValidationArray" + " " + __p.path);
 
-							var aChildRes = fTransformModelToValidationArray(oChildNodePath);
-							Array.prototype.push.apply(poAcc, aChildRes);
-						}
-				}
-			}
-			return poAcc;
-		}, []);
-
-		// console.log("fTransformModelToValidationArray" + " " + __p.path);
-
-		return oAcc;
-	}, function(result, value) {
-		// Cleanup
-		delete oNodePathMemory[value.path];
-	});
+			return oAcc;
+		},
+		function(result, value) {
+			// Cleanup
+			delete oCacheForNodePath[value.path];
+		});
+	fTransformModelToValidationArray = function(oNode, sPath) {
+		var oNodePath = _fGetNodePathObject(oNode, sPath);
+		return _fTransformModelToValidationArrayMobX(oNodePath);
+	};
 
 	var fTransformValidationToMessage = __mobx.createTransformer(function(oValidation) { // Current value, index, array
 		return new Message({
@@ -144,6 +167,30 @@ sap.ui.define([
 			validation: true
 		});
 	});
+
+	/**
+	 * Get model object property validation results by type validation. Non-changed state appears to be valid regardless of validity.
+	 *
+	 * @param {object} oObject - 		Model object
+	 * @param {string} sProperty -		Model object property name
+	 * @param {object} oType -			Property type instance
+	 * @param {string} sInternalType -	Type used to display and input property, c.f. model type
+	 * @param {boolean} bIgnoreChanged - Ignore (non-)changed state of property when setting valueState. true: valueState is set even if value hasn't been
+	 *										changed by user
+	 * @return {object} 		{valid: boolean, valueState: sap.ui.core.ValueState, valueStateText: string}
+	 */
+	var fGetModelPropertyValidationByType = function(oObject, sProperty, oType, sInternalType, bIgnoreChanged) {
+
+		var oRet = _fTransformModelPropertyToValidationByType(oObject[sProperty], oType, sInternalType);
+
+		if (!oRet.valid) {
+			var bChanged = oObject[sProperty + "$Changed"];
+			oRet.valueState = bChanged || bIgnoreChanged ? "Error" : "None";
+		} else {
+			oRet.valueState = "None";
+		}
+		return oRet;
+	};
 
 	var models = {
 		createDeviceModel: function() {
@@ -158,16 +205,16 @@ sap.ui.define([
 					FirstName: "",
 					FirstName$Changed: false,
 					get FirstName$Validation() {
-						return models.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
+						return fGetModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
 					},
 					get FirstName$WithApple$Validation() {
-						return models.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringWithApple, "string", state.$ignoreChanged);
+						return fGetModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringWithApple, "string", state.$ignoreChanged);
 					},
 
 					LastName: "",
 					LastName$Changed: false,
 					get LastName$Validation() {
-						return models.getModelPropertyValidationByType(this, "LastName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
+						return fGetModelPropertyValidationByType(this, "LastName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
 					},
 					//
 					get FullName() {
@@ -205,12 +252,12 @@ sap.ui.define([
 							var oDwarfExtension = {
 								FirstName$Changed: false,
 								get FirstName$Validation() {
-									return models.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
+									return fGetModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
 								},
 								//
 								LastName$Changed: false,
 								get LastName$Validation() {
-									return models.getModelPropertyValidationByType(this, "LastName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
+									return fGetModelPropertyValidationByType(this, "LastName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
 								},
 								//
 								get FullName() {
@@ -253,71 +300,12 @@ sap.ui.define([
 			};
 		},
 
-		/**
-		 * Get model object property validation results by type validation. Non-changed state appears to be valid regardless of validity.
-		 *
-		 * @param {object} oObject - 		Model object
-		 * @param {string} sProperty -		Model object property name
-		 * @param {object} oType -			Property type instance
-		 * @param {string} sInternalType -	Type used to display and input property, c.f. model type
-		 * @param {boolean} bIgnoreChanged - Ignore (non-)changed state of property when setting valueState. true: valueState is set even if value hasn't been
-		 *										changed by user
-		 * @return {object} 		{valid: boolean, valueState: sap.ui.core.ValueState, valueStateText: string}
-		 */
-		getModelPropertyValidationByType: function(oObject, sProperty, oType, sInternalType, bIgnoreChanged) {
-
-			var oRet = models._transformModelPropertyToValidationByType({
-				value: oObject[sProperty],
-				oType: oType,
-				sInternalType: sInternalType
-			});
-
-			if (!oRet.valid) {
-				var bChanged = oObject[sProperty + "$Changed"];
-				oRet.valueState = bChanged || bIgnoreChanged ? "Error" : "None";
-			} else {
-				oRet.valueState = "None";
-			}
-			return oRet;
-		},
-
 		transformModelToValidationArray: __mobx.createTransformer(function(oSource) {
-			var oNodePath = _getChildNodePathObject(oSource, "");
-			return fTransformModelToValidationArray(oNodePath);
+			return fTransformModelToValidationArray(oSource, "");
 		}),
 
 		transformValidationArrayToValidationMessages: __mobx.createTransformer(function(aSource) {
-
-			// console.log("transformValidationArrayToValidationMessages");
-
 			return aSource.filter(fFilterValidationToMessage).map(fTransformValidationToMessage);
-		}),
-
-		_transformModelPropertyToValidationByType: _memoize(function(oSource) { // {value, oType, sInternalType}
-			//																		Is memoization really worth it here?
-			if (!oSource.oType || !oSource.sInternalType) {
-				throw new Error("Invalid function call");
-			}
-
-			// console.log("_transformModelPropertyToValidationByType");
-
-			var oRet = {
-				valid: true,
-				valueStateText: ""
-			};
-
-			try {
-				var parsedValue = oSource.oType.parseValue(oSource.value, oSource.sInternalType, true);
-				oSource.oType.validateValue(parsedValue, true);
-			} catch (oException) {
-				if (oException instanceof ParseException || oException instanceof ValidateException) {
-					oRet.valid = false;
-					oRet.valueStateText = oException.message;
-				} else {
-					throw oException;
-				}
-			}
-			return oRet;
 		})
 	};
 	return models;
