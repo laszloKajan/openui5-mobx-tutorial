@@ -13,12 +13,12 @@ sap.ui.define([
 	Message) {
 	"use strict";
 
-	var MobxModelTypeString = MobxModelTypeFactory.getExtendedType(String, "org.debian.lkajan.mobxTutorial.model.type.String");
+	var MobxModelTypeString = MobxModelTypeFactory.createExtendedType(String, "org.debian.lkajan.mobxTutorial.model.type.String");
 	var oMobxModelTypeStringName = new MobxModelTypeString({}, {
 		search: /^(|[^0-9\s]{3,})$/
 	});
 
-	var MobxModelTypeStringWithApple = MobxModelTypeFactory.getExtendedType(RawStringWithApple,
+	var MobxModelTypeStringWithApple = MobxModelTypeFactory.createExtendedType(RawStringWithApple,
 		"org.debian.lkajan.mobxTutorial.model.type.StringWithApple");
 	var oMobxModelTypeStringWithApple = new MobxModelTypeStringWithApple({}, {
 		search: /^(|[^0-9\s]{3,})$/

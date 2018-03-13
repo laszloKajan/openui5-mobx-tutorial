@@ -5,11 +5,11 @@ sap.ui.define([
 	"use strict";
 
 	return {
-		getExtendedType: function(BaseType, sNewTypeName) {
+		createExtendedType: function(BaseType, sNewTypeName) {
 			return BaseType.extend(sNewTypeName, {
 				constructor: function() {
 					BaseType.prototype.constructor.apply(this, arguments);
-					this.sNameSubtype = sNewTypeName; // C.f. this.sName
+					this.sNameSubtype = sNewTypeName; // C.f. this.sName. We need this to tell apart types after the current JSON.stringify in models.js.
 				},
 				
 				formatValue: function(value, sInternalType) {
