@@ -1,5 +1,5 @@
 # openui5-mobx-tutorial
-Tutorial for SAPUI5/OpenUI5 with reactive MobX model.
+Tutorial for SAPUI5/OpenUI5 with reactive MobX model ([Plunker](https://plnkr.co/edit/YRBqLl?p=preview)).
 
 Starting from a SAPUI5 app with validation and MessageManager, this tutorial shows you how you can extend an existing app with reactive components step-by-step. 
 
