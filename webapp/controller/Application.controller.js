@@ -62,16 +62,10 @@ sap.ui.define([
 			oMessageManager.registerMessageProcessor(oMessageProcessor);
 			oMessageManager.registerObject(this.getView(), true); // Handle validation for this view
 
-			//	Flatten validation results
+			//	Flatten validation results: transform domain model to validation array
 			this.oObservableValidation = __mobx.observable({
 				results: [] // will be replaced by transformation to observable array
 			});
-
-			this.oObservableValidationMessages = __mobx.observable({
-				messages: []
-			});
-
-			//	Transform domain model to validation array
 			this._fAutorunDisposerObservableValidation = __mobx.reaction(
 				Validation.transformModelToValidationArray.bind(this, oDomainModel.getObservable()),
 				function(aValidationResults) {
@@ -84,6 +78,9 @@ sap.ui.define([
 			);
 
 			//	Transform validation array to validation message array
+			this.oObservableValidationMessages = __mobx.observable({
+				messages: []
+			});
 			this._fAutorunDisposerObservableValidationMessages = __mobx.reaction(
 				function() {
 					return Validation.transformValidationArrayToValidationMessages(this.oObservableValidation.results);
@@ -94,7 +91,7 @@ sap.ui.define([
 				true // Fire immediately
 			);
 
-			//	Merge messages when oDomainModel validation changes
+			//	Merge messages when validation message array changes
 			this._fAutorunDisposerValidationArrayMerge = __mobx.reaction(
 				function() {
 					return this.oObservableValidationMessages.messages.peek();
@@ -103,7 +100,7 @@ sap.ui.define([
 				true // Fire immediately
 			);
 
-			//	Merge messages when oMessageManager validation changes
+			//	Merge messages when oMessageManager message model changes
 			this._oMessageModelBinding = new ListBinding(oMessageManager.getMessageModel(), "/");
 			this._oMessageModelBinding.attachChange(this._mergeMessageModelMessages, this);
 
