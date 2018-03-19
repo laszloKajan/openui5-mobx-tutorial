@@ -46,12 +46,12 @@ sap.ui.define([
 			// Application model
 			var oAppModel = new MobxModel(__mobx.observable({
 				get canSubmit() {
-					return this.validateDomainResult && that.oObservableValidation.results.length === 0;
+					return this.validateDomainCallResult && that.oObservableValidation.results.length === 0;
 				},
 				get messageCount() {
 					return this.validationMessages.length;
 				},
-				validateDomainResult: false,
+				validateDomainCallResult: false,
 				validationMessages: []
 			}));
 			this.getView().setModel(oAppModel);
@@ -179,9 +179,9 @@ sap.ui.define([
 				// Now reactive // bValid = bValid && this._validateInput("inputSWLastName");
 				bValid = bValid && this._validateInput("inputSWAge");
 
-				this.getView().getModel().setProperty("/validateDomainResult", bValid);
+				this.getView().getModel().setProperty("/validateDomainCallResult", bValid);
 			} catch (oEx) {
-				this.getView().getModel().setProperty("/validateDomainResult", false);
+				this.getView().getModel().setProperty("/validateDomainCallResult", false);
 				throw oEx;
 			}
 		},
