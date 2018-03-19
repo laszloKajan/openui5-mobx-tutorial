@@ -69,9 +69,6 @@ sap.ui.define([
 			this._fAutorunDisposerObservableValidation = __mobx.reaction(
 				Validation.transformModelToValidationArray.bind(this, oDomainModel.getObservable()),
 				function(aValidationResults) {
-					// // Don't reassign results, that breaks MobX tracking. Change array contents instead.
-					// this.oObservableValidation.results.length = 0;
-					// Array.prototype.push.apply(this.oObservableValidation.results, aValidationResults);
 					this.oObservableValidation.results = aValidationResults;
 				}.bind(this),
 				true // Fire immediately
