@@ -149,8 +149,8 @@
 				</content>
 				<footer>
 					<Toolbar>
-						<Button icon="sap-icon://message-popup" visible="true" text="{= ${/validationMessagesLength} &gt; 0 ? ${/validationMessagesLength} : ''}"
-							type="{= ${/validationMessagesLength} &gt; 0 ? 'Emphasized' : 'Default'}" press="onValidationMessagesPress"/>
+						<Button icon="sap-icon://message-popup" visible="true" text="{= ${/messageCount} &gt; 0 ? ${/messageCount} : ''}"
+							type="{= ${/messageCount} &gt; 0 ? 'Emphasized' : 'Default'}" press="onValidationMessagesPress"/>
 						<Button text="{i18n>fixSWFirstName}" press="onFixSWFirstName"/>
 						<ToolbarSpacer/>
 						<Button id="btnAddDwarf" text="{i18n>addDwarf}" enabled="{= ${domain&gt;/DwarfCount} &lt; 3}" press="onPressAddDwarf"/>

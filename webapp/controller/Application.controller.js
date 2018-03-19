@@ -48,11 +48,11 @@ sap.ui.define([
 				get canSubmit() {
 					return this.validateDomainResult && that.oObservableValidation.results.length === 0;
 				},
-				validateDomainResult: false,
-				validationMessages: [],
-				get validationMessagesLength() {
+				get messageCount() {
 					return this.validationMessages.length;
-				}
+				},
+				validateDomainResult: false,
+				validationMessages: []
 			}));
 			this.getView().setModel(oAppModel);
 
