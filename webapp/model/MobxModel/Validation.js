@@ -164,7 +164,11 @@ sap.ui.define([
 		 */
 		getModelPropertyValidationByType: function(oObject, sProperty, oType, sInternalType, bIgnoreChanged) {
 
-			var oRet = _fTransformModelPropertyToValidationByType(oObject[sProperty], oType, sInternalType);
+			var oVal = _fTransformModelPropertyToValidationByType(oObject[sProperty], oType, sInternalType);
+			var oRet = { // Must copy object, because it's memoized and we might change it below.
+				valid: oVal.valid,
+				valueStateText: oVal.valueStateText
+			};
 
 			if (!oRet.valid) {
 				var bChanged = oObject[sProperty + "$Changed"];
