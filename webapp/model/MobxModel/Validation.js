@@ -160,7 +160,7 @@ sap.ui.define([
 		 * @param {string} sInternalType -	Type used to display and input property, c.f. model type
 		 * @param {boolean} bIgnoreChanged - Ignore (non-)changed state of property when setting valueState. true: valueState is set even if value hasn't been
 		 *										changed by user
-		 * @return {object} 		{valid: boolean, valueState: sap.ui.core.ValueState, valueStateText: string}
+		 * @return {object} 				{valid: boolean, valueState: sap.ui.core.ValueState, valueStateText: string}
 		 */
 		getModelPropertyValidationByType: function(oObject, sProperty, oType, sInternalType, bIgnoreChanged) {
 
