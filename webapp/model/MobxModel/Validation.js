@@ -1,5 +1,5 @@
 sap.ui.define([
-	"org/js/mobx/mobx.umd",
+	"org/js/mobx/mobx.umd.min",
 	"org/js/mobxUtils/mobx-utils.umd",
 	"sap/ui/core/message/Message",
 	"sap/ui/model/ParseException",

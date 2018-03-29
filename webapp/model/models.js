@@ -1,7 +1,7 @@
 sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/Device",
-	"org/js/mobx/mobx.umd",
+	"org/js/mobx/mobx.umd.min",
 	"sap/ui/mobx/MobxModel",
 	"sap/ui/model/type/String",
 	"org/debian/lkajan/mobxTutorial/model/type/raw/StringWithApple",

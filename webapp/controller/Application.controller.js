@@ -9,7 +9,7 @@ sap.ui.define([
 	"sap/ui/model/ValidateException",
 	"sap/ui/model/ListBinding",
 	"org/debian/lkajan/mobxTutorial/model/models",
-	"org/js/mobx/mobx.umd",
+	"org/js/mobx/mobx.umd.min",
 	"sap/ui/mobx/MobxModel",
 	"org/debian/lkajan/mobxTutorial/model/MobxModel/Validation"
 ], function(MessagePopover, MessagePopoverItem, Controller, JSONModel, ControlMessageProcessor, TypeString, ParseException,
