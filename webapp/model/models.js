@@ -118,7 +118,7 @@ sap.ui.define([
 						return change;
 					});
 				}
-			}, true); // invokeImmediately
+			}, true); // fireImmediately
 
 			var oModel = new MobxModel(state);
 			return oModel;
