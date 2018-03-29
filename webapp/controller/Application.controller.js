@@ -70,8 +70,9 @@ sap.ui.define([
 				Validation.transformModelToValidationArray.bind(this, oDomainModel.getObservable()),
 				function(aValidationResults) {
 					this.oObservableValidation.results = aValidationResults;
-				}.bind(this),
-				true // Fire immediately
+				}.bind(this), {
+					fireImmediately: true
+				}
 			);
 
 			//	Transform validation array to validation message array
@@ -84,8 +85,9 @@ sap.ui.define([
 				}.bind(this),
 				function(aValidationMessages) {
 					this.oObservableValidationMessages.messages = aValidationMessages;
-				}.bind(this),
-				true // Fire immediately
+				}.bind(this), {
+					fireImmediately: true
+				}
 			);
 
 			//	Merge messages when validation message array changes
@@ -94,7 +96,9 @@ sap.ui.define([
 					return this.oObservableValidationMessages.messages.peek();
 				}.bind(this),
 				this._mergeMessageModelMessages.bind(this), // changes oAppModel
-				true // Fire immediately
+				{
+					fireImmediately: true
+				}
 			);
 
 			//	Merge messages when oMessageManager message model changes
