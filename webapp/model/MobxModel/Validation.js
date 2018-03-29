@@ -1,9 +1,10 @@
 sap.ui.define([
-	"org/js/mobx/3.5.1/mobx.umd.min",
+	"org/js/mobx/mobx.umd",
+	"org/js/mobxUtils/mobx-utils.umd",
 	"sap/ui/core/message/Message",
 	"sap/ui/model/ParseException",
 	"sap/ui/model/ValidateException"
-], function(__mobx, Message, ParseException, ValidateException) {
+], function(__mobx, __mobxUtils, Message, ParseException, ValidateException) {
 	"use strict";
 
 	var oCacheForNodePath = {};
@@ -41,7 +42,7 @@ sap.ui.define([
 		}
 		return oValueType;
 	};
-	var _fTransformModelPropertyToValidationByTypeMobX = __mobx.createTransformer(
+	var _fTransformModelPropertyToValidationByTypeMobX = __mobxUtils.createTransformer(
 		function(oSource) { // {value, oType, sInternalType}
 			//					Is memoization really worth it here?
 			if (!oSource.oType || !oSource.sInternalType) {
@@ -78,7 +79,7 @@ sap.ui.define([
 	var fFilterValidationToMessage = function(oValidation) {
 		return oValidation.valueState !== "None";
 	};
-	var fTransformValidation = __mobx.createTransformer(function(oValidation) {
+	var fTransformValidation = __mobxUtils.createTransformer(function(oValidation) {
 		return {
 			valid: oValidation.valid,
 			valueState: oValidation.valueState,
@@ -87,7 +88,7 @@ sap.ui.define([
 		};
 	});
 	var fTransformModelToValidationArray;
-	var _fTransformModelToValidationArrayMobX = __mobx.createTransformer(
+	var _fTransformModelToValidationArrayMobX = __mobxUtils.createTransformer(
 		function(__p) { // ({node: stateNode, path: ""})
 
 			var oNode = __p.node;
@@ -142,7 +143,7 @@ sap.ui.define([
 		return _fTransformModelToValidationArrayMobX(oNodePath);
 	};
 
-	var fTransformValidationToMessage = __mobx.createTransformer(function(oValidation) { // Current value, index, array
+	var fTransformValidationToMessage = __mobxUtils.createTransformer(function(oValidation) { // Current value, index, array
 		return new Message({
 			message: oValidation.valueStateText.replace(/([{}])/g, "\\$1"),
 			type: oValidation.valueState,
@@ -179,11 +180,11 @@ sap.ui.define([
 			return oRet;
 		},
 
-		transformModelToValidationArray: __mobx.createTransformer(function(oSource) {
+		transformModelToValidationArray: __mobxUtils.createTransformer(function(oSource) {
 			return fTransformModelToValidationArray(oSource, "");
 		}),
 
-		transformValidationArrayToValidationMessages: __mobx.createTransformer(function(aSource) {
+		transformValidationArrayToValidationMessages: __mobxUtils.createTransformer(function(aSource) {
 			return aSource.filter(fFilterValidationToMessage).map(fTransformValidationToMessage);
 		})
 	};

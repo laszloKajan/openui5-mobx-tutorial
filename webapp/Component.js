@@ -1,14 +1,18 @@
 jQuery.sap.registerModuleShims({
-	"org/js/mobx/3.5.1/mobx.umd.min": {
+	"org/js/mobx/mobx.umd": {
 		exports: "mobx"
+	},
+	"org/js/mobxUtils/mobx-utils.umd": {
+		exports: "mobxUtils"
 	}
 });
 
 /* eslint-disable sap-no-hardcoded-url */
-jQuery.sap.registerModulePath("org.js.mobx", "https://cdnjs.cloudflare.com/ajax/libs/mobx");
-jQuery.sap.registerModulePath("sap.ui.mobx", "https://raw.githubusercontent.com/laszloKajan/openui5-mobx-model/master/src");
-// jQuery.sap.registerModulePath("org.js.mobx", "/sap/bc/bsp/sap/zx6g_libmobx");
-// jQuery.sap.registerModulePath("sap.ui.mobx", "/sap/bc/ui5_ui5/sap/zx6g_libmobxui5");
+// jQuery.sap.registerModulePath("org.js.mobx", "https://cdnjs.cloudflare.com/ajax/libs/mobx");
+// jQuery.sap.registerModulePath("sap.ui.mobx", "https://raw.githubusercontent.com/laszloKajan/openui5-mobx-model/master/src");
+jQuery.sap.registerModulePath("org.js.mobx", "/sap/bc/bsp/sap/zx6g_libmobx/4.1.1");
+jQuery.sap.registerModulePath("org.js.mobxUtils", "/sap/bc/bsp/sap/zx6g_libmobx_utils/4.0.0");
+jQuery.sap.registerModulePath("sap.ui.mobx", "/sap/bc/ui5_ui5/sap/zx6g_libmobxui5");
 /* eslint-enable sap-no-hardcoded-url */
 
 sap.ui.define([

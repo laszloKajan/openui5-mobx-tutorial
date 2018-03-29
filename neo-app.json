@@ -27,6 +27,14 @@
 		},
 		"description": "MobX Anything that can be derived from the application state, should be derived. Automatically."
 	}, {
+		"path": "/sap/bc/bsp/sap/zx6g_libmobx_utils",
+		"target": {
+			"type": "destination",
+			"name": "localhost_zx6g_libmobx",
+			"entryPath": "/zx6g_libmobx_utils"
+		},
+		"description": "MobX Anything that can be derived from the application state, should be derived. Automatically."
+	}, {
 		"path": "/sap/bc/ui5_ui5/sap/zx6g_libmobxui5",
 		"target": {
 			"type": "destination",
