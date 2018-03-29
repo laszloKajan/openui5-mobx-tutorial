@@ -29,10 +29,11 @@ sap.ui.define([
 		},
 
 		createDomainModel: function(oI18nResourceBundle) {
-			var state = __mobx.observable({
+			var state = __mobx.observable.object({
 				SnowWhite: {
+					// Note: though not obligatory, it's a good idea to initialize the names, because otherwise we get RegExp matching errors like
+					//	`Cannot read property 'search' of undefined`
 					FirstName: "",
-					FirstName$Changed: false,
 					get FirstName$Validation() {
 						return Validation.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
 					},
@@ -41,16 +42,18 @@ sap.ui.define([
 					},
 
 					LastName: "",
-					LastName$Changed: false,
 					get LastName$Validation() {
 						return Validation.getModelPropertyValidationByType(this, "LastName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
 					},
-					//
+
+					// Computed
 					get FullName() {
 						return (this.FirstName ? (this.FirstName + (this.LastName ? " " : "")) : "") + (this.LastName || "");
 					},
 					get FullName$Changed() { // Indicates "changed by user"
-						return this.FirstName$Changed || this.LastName$Changed;
+						// Note: must use __mobx.get() in case property is not guaranteed to exist in the model, like here.
+						//	Note: __mobx.get() doesn't work on computed properties (!).
+						return __mobx.get(this, "FirstName$Changed") || __mobx.get(this, "LastName$Changed");
 					},
 					get FullName$Validation() {
 
@@ -73,27 +76,26 @@ sap.ui.define([
 			});
 
 			// Dwarf handling
+			// Idea: provide help with adding the ($Changed and) $Validation property
 			__mobx.observe(state, "Dwarfs", function(change0) { // Returns a disposer
 				if (change0.type === "update") {
 					__mobx.intercept(state.Dwarfs, function(change) {
 						// New dwarf(s) added
 						if (change.type === "splice" && change.added.length) {
 							var oDwarfExtension = {
-								FirstName$Changed: false,
 								get FirstName$Validation() {
 									return Validation.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
 								},
-								//
-								LastName$Changed: false,
+
 								get LastName$Validation() {
 									return Validation.getModelPropertyValidationByType(this, "LastName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
 								},
-								//
+
 								get FullName() {
 									return (this.FirstName ? (this.FirstName + (this.LastName ? " " : "")) : "") + (this.LastName || "");
 								},
 								get FullName$Changed() { // Indicates "changed by user"
-									return this.FirstName$Changed || this.LastName$Changed;
+									return __mobx.get(this, "FirstName$Changed") || __mobx.get(this, "LastName$Changed");
 								},
 								get FullName$Validation() {
 									var bValid = this.FirstName$Validation.valid && this.LastName$Validation.valid && Boolean(this.FullName);
