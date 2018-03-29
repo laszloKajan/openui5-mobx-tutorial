@@ -15,7 +15,7 @@ sap.ui.define([
 
 			var sApple = "🍎";
 			var sParsed = value;
-			if(value.indexOf(sApple) === 0) {
+			if(value && value.indexOf(sApple) === 0) {
 				// throw new ParseException("Enter a name that begins with 🍎.");
 				sParsed = value.slice(sApple.length); // It's two indices long
 			}
