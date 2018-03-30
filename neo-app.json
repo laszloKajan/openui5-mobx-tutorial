@@ -42,6 +42,14 @@
 			"entryPath": "/openui5-mobx-model/src"
 		},
 		"description": "sap.ui.mobx - MobX bindings for SAPUI5"
+	}, {
+		"path": "/sap/bc/ui5_ui5/sap/zx6g_libmobxval",
+		"target": {
+			"type": "destination",
+			"name": "localhost_zx6g_libmobxui5",
+			"entryPath": "/openui5-mobx-model-validation/src"
+		},
+		"description": "sap.ui.mobxValidation - MobxModel validation helpers"
 	}],
 	"sendWelcomeFileRedirect": true
 }

@@ -11,7 +11,7 @@ sap.ui.define([
 	"org/debian/lkajan/mobxTutorial/model/models",
 	"org/js/mobx/mobx.umd.min",
 	"sap/ui/mobx/MobxModel",
-	"org/debian/lkajan/mobxTutorial/model/MobxModel/Validation"
+	"sap/ui/mobxValidation/Utils"
 ], function(MessagePopover, MessagePopoverItem, Controller, JSONModel, ControlMessageProcessor, TypeString, ParseException,
 	ValidateException, ListBinding, models, __mobx, MobxModel, Validation) {
 	"use strict";

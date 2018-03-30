@@ -5,8 +5,8 @@ sap.ui.define([
 	"sap/ui/mobx/MobxModel",
 	"sap/ui/model/type/String",
 	"org/debian/lkajan/mobxTutorial/model/type/raw/StringWithApple",
-	"org/debian/lkajan/mobxTutorial/model/MobxModel/TypeFactory",
-	"org/debian/lkajan/mobxTutorial/model/MobxModel/Validation"
+	"sap/ui/mobxValidation/TypeFactory",
+	"sap/ui/mobxValidation/Utils"
 ], function(JSONModel, Device, __mobx, MobxModel, String, RawStringWithApple, TypeFactory, Validation) {
 	"use strict";
 
