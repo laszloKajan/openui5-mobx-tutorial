@@ -119,25 +119,21 @@
 											<Text text="`{domain&gt;/Dwarfs/1/FullName}'"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 3}" label="{i18n>dwarf2}">
+									<f:FormElement id="formElementDwarf2" label="{i18n>dwarf2}">
 										<f:fields>
-											<Input value="{path: 'domain&gt;/Dwarfs/2/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{parts: ['domain&gt;/Dwarfs/2/FirstName$Validation', 'domain&gt;/Dwarfs/2/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
-												valueStateText="{parts: ['domain&gt;/Dwarfs/2/FirstName$Validation', 'domain&gt;/Dwarfs/2/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
+											<Input id="inputFirstNameDwarf2" value="{path: 'domain&gt;/Dwarfs/2/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
 												change="onChangeSetChanged"/>
-											<Input value="{path: 'domain&gt;/Dwarfs/2/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{parts: ['domain&gt;/Dwarfs/2/LastName$Validation', 'domain&gt;/Dwarfs/2/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
-												valueStateText="{parts: ['domain&gt;/Dwarfs/2/LastName$Validation', 'domain&gt;/Dwarfs/2/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
+											<Input id="inputLastNameDwarf2" value="{path: 'domain&gt;/Dwarfs/2/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 3}" label="{i18n>inModel}">
+									<f:FormElement id="formElementDwarf2-1" label="{i18n>inModel}">
 										<f:fields>
 											<Text text="`{domain&gt;/Dwarfs/2/FirstName}'"/>
 											<Text text="`{domain&gt;/Dwarfs/2/LastName}'"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 3}" label="">
+									<f:FormElement id="formElementDwarf2-2" label="">
 										<f:fields>
 											<Text text="`{domain&gt;/Dwarfs/2/FullName}'"/>
 										</f:fields>
@@ -149,8 +145,7 @@
 				</content>
 				<footer>
 					<Toolbar>
-						<Button icon="sap-icon://message-popup" visible="true" text="{= ${/messageCount} &gt; 0 ? ${/messageCount} : ''}"
-							type="{= ${/messageCount} &gt; 0 ? 'Emphasized' : 'Default'}" press="onValidationMessagesPress"/>
+						<Button id="btnMessagePopup" icon="sap-icon://message-popup" visible="true" press="onValidationMessagesPress"/>
 						<Button text="{i18n>fixSWFirstName}" press="onFixSWFirstName"/>
 						<ToolbarSpacer/>
 						<Button id="btnAddDwarf" text="{i18n>addDwarf}" enabled="{= ${domain&gt;/DwarfCount} &lt; 3}" press="onPressAddDwarf"/>

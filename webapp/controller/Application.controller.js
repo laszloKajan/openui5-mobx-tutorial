@@ -106,6 +106,78 @@ sap.ui.define([
 			this._oMessageModelBinding.attachChange(this._mergeMessageModelMessages, this);
 
 			oMessagePopover.setModel(oAppModel);
+
+			// Reactive controls
+			__mobx.reaction(function() {
+					return this.getView().getModel().getObservable().messageCount;
+				}.bind(this),
+				function(nMessageCount, reaction) {
+					var oControl = this.byId("btnMessagePopup");
+					oControl.setText(nMessageCount > 0 ? nMessageCount : "");
+					oControl.setType(nMessageCount > 0 ? "Emphasized" : "Default");
+				}.bind(this), {
+					fireImmediately: true,
+					delay: 1
+				});
+
+			__mobx.reaction(function() {
+					return this.getView().getModel("domain").getObservable().DwarfCount;
+				}.bind(this),
+				function(nDwarfCount) {
+					["formElementDwarf2", "formElementDwarf2-1", "formElementDwarf2-2"].forEach(function(sId) {
+						var oControl = this.byId(sId);
+						oControl.setVisible(nDwarfCount >= 3);
+					}.bind(this));
+				}.bind(this), {
+					fireImmediately: true,
+					delay: 1
+				});
+
+			__mobx.reaction(function() {
+				var oDwarf = __mobx.get(this.getView().getModel("domain").getObservable().Dwarfs, 2);
+				return oDwarf ? {
+					firstNameValidation: oDwarf.FirstName$Validation,
+					fullNameValidation: oDwarf.FullName$Validation
+				} : undefined;
+			}.bind(this), function(oValidation) {
+				var oControlFirstName = this.byId("inputFirstNameDwarf2");
+
+				if (oValidation) {
+
+					oControlFirstName.setValueState(this.formatterValueStateFieldPair(oValidation.firstNameValidation, oValidation.fullNameValidation));
+					oControlFirstName.setValueStateText(this.formatterValueStateTextFieldPair(oValidation.firstNameValidation, oValidation.fullNameValidation));
+				} else {
+
+					// oControlFirstName.setValueState("None");
+					// oControlFirstName.setValueStateText("None");
+				}
+			}.bind(this), {
+				fireImmediately: true,
+				delay: 1
+			});
+
+			__mobx.reaction(function() {
+				var oDwarf = __mobx.get(this.getView().getModel("domain").getObservable().Dwarfs, 2);
+				return oDwarf ? {
+					lastNameValidation: oDwarf.LastName$Validation,
+					fullNameValidation: oDwarf.FullName$Validation
+				} : undefined;
+			}.bind(this), function(oValidation) {
+				var oControlLastName = this.byId("inputLastNameDwarf2");
+
+				if (oValidation) {
+
+					oControlLastName.setValueState(this.formatterValueStateFieldPair(oValidation.lastNameValidation, oValidation.fullNameValidation));
+					oControlLastName.setValueStateText(this.formatterValueStateTextFieldPair(oValidation.lastNameValidation, oValidation.fullNameValidation));
+				} else {
+
+					// oControlLastName.setValueState("None");
+					// oControlLastName.setValueStateText("None");
+				}
+			}.bind(this), {
+				fireImmediately: true,
+				delay: 1
+			});
 		},
 
 		onExit: function() {
