@@ -60,7 +60,7 @@ sap.ui.define([
 						var bValid = this.FirstName$Validation.valid && this.LastName$Validation.valid && Boolean(this.FullName);
 						return {
 							valid: bValid,
-							valueState: bValid ? "None" : (this.FullName$Changed || state.$ignoreChanged ? "Error" : "None"),
+							valueState: bValid ? "None" : (__mobx.get(this, "FullName$Changed") || state.$ignoreChanged ? "Error" : "None"),
 							valueStateText: bValid ? "" : oI18nResourceBundle.getText("atLeastCorrectFirstOrLast")
 						};
 					},
