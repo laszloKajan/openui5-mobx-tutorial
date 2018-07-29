@@ -64,10 +64,10 @@ sap.ui.define([
 				$ignoreChanged: false // If true, set $Validation.valueState regardless of $Changed state
 			});
 			// Validation
-			Validation.reactionByTypeChanged(state, "FirstName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
-			Validation.reactionByTypeChanged(state, "FirstName", this.oMobxModelTypeStringWithApple, "string", state, "$ignoreChanged",
+			Validation.reactionByTypeChanged(state.SnowWhite, "FirstName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
+			Validation.reactionByTypeChanged(state.SnowWhite, "FirstName", this.oMobxModelTypeStringWithApple, "string", state, "$ignoreChanged",
 				"FirstName$WithApple$Validation", "FirstName$Changed");
-			Validation.reactionByTypeChanged(state, "LastName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
+			Validation.reactionByTypeChanged(state.SnowWhite, "LastName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
 
 			// Dwarf handling
 			// Idea: provide help with adding the ($Changed and) $Validation property
