@@ -38,13 +38,13 @@ sap.ui.define([
 			var that = this;
 
 			// Domain model
-			var oDomainModel = models.createDomainModel(
+			var oModelDomain = models.createDomainModel(
 				this.getOwnerComponent().getModel("i18n").getResourceBundle()
 			);
-			this.getView().setModel(oDomainModel, "domain");
+			this.getView().setModel(oModelDomain, "domain");
 
 			// Application model
-			var oAppModel = new MobxModel(__mobx.observable({
+			var oModelApp = new MobxModel(__mobx.observable({
 				get canSubmit() {
 					return this.validateDomainCallResult && that.oObservableValidation.results.length === 0;
 				},
@@ -54,7 +54,7 @@ sap.ui.define([
 				validateDomainCallResult: false,
 				validationMessages: []
 			}));
-			this.getView().setModel(oAppModel);
+			this.getView().setModel(oModelApp);
 
 			// Message management
 			var oMessageManager = sap.ui.getCore().getMessageManager(),
@@ -67,7 +67,7 @@ sap.ui.define([
 				results: [] // will be replaced by transformation to observable array
 			});
 			this._fAutorunDisposerObservableValidation = __mobx.reaction(
-				Validation.transformModelToValidationArray.bind(this, oDomainModel.getObservable()),
+				Validation.transformModelToValidationArray.bind(this, oModelDomain.getObservable()),
 				function(aValidationResults) {
 					this.oObservableValidation.results = aValidationResults;
 				}.bind(this), {
@@ -95,7 +95,7 @@ sap.ui.define([
 				function() {
 					return this.oObservableValidationMessages.messages.peek(); // Returns an array with all the values
 				}.bind(this),
-				this._mergeMessageModelMessages.bind(this), // changes oAppModel
+				this._mergeMessageModelMessages.bind(this), // changes oModelApp
 				{
 					fireImmediately: true
 				}
@@ -105,7 +105,7 @@ sap.ui.define([
 			this._oMessageModelBinding = new ListBinding(oMessageManager.getMessageModel(), "/");
 			this._oMessageModelBinding.attachChange(this._mergeMessageModelMessages, this);
 
-			oMessagePopover.setModel(oAppModel);
+			oMessagePopover.setModel(oModelApp);
 
 			// Reactive controls
 			__mobx.reaction(function() {
