@@ -11,17 +11,17 @@ sap.ui.define([
 	"use strict";
 
 	var MobxModelTypeString = TypeFactory.createExtendedType(String, "org.debian.lkajan.mobxTutorial.model.type.String");
-	var oMobxModelTypeStringName = new MobxModelTypeString({}, {
-		search: /^(|[^0-9\s]{3,})$/
-	});
-
 	var MobxModelTypeStringWithApple = TypeFactory.createExtendedType(RawStringWithApple,
 		"org.debian.lkajan.mobxTutorial.model.type.StringWithApple");
-	var oMobxModelTypeStringWithApple = new MobxModelTypeStringWithApple({}, {
-		search: /^(|[^0-9\s]{3,})$/
-	});
 
 	var models = {
+		oMobxModelTypeStringName: new MobxModelTypeString({}, {
+			search: /^(|[^0-9\s]{3,})$/
+		}),
+		oMobxModelTypeStringWithApple: new MobxModelTypeStringWithApple({}, {
+			search: /^(|[^0-9\s]{3,})$/
+		}),
+
 		createDeviceModel: function() {
 			var oModel = new JSONModel(Device);
 			oModel.setDefaultBindingMode("OneWay");
@@ -34,18 +34,7 @@ sap.ui.define([
 					// Note: though not obligatory, it's a good idea to initialize the names, because otherwise we get RegExp matching errors like
 					//	`Cannot read property 'search' of undefined`
 					FirstName: "",
-					get FirstName$Validation() {
-						return Validation.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
-					},
-					get FirstName$WithApple$Validation() {
-						return Validation.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringWithApple, "string", state.$ignoreChanged);
-					},
-
 					LastName: "",
-					get LastName$Validation() {
-						return Validation.getModelPropertyValidationByType(this, "LastName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
-					},
-
 					// Computed
 					get FullName() {
 						return (this.FirstName ? (this.FirstName + (this.LastName ? " " : "")) : "") + (this.LastName || "");
@@ -74,6 +63,11 @@ sap.ui.define([
 				//
 				$ignoreChanged: false // If true, set $Validation.valueState regardless of $Changed state
 			});
+			// Validation
+			Validation.reactionByTypeChanged(state, "FirstName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
+			Validation.reactionByTypeChanged(state, "FirstName", this.oMobxModelTypeStringWithApple, "string", state, "$ignoreChanged",
+				"FirstName$WithApple$Validation", "FirstName$Changed");
+			Validation.reactionByTypeChanged(state, "LastName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
 
 			// Dwarf handling
 			// Idea: provide help with adding the ($Changed and) $Validation property
@@ -83,14 +77,6 @@ sap.ui.define([
 						// New dwarf(s) added
 						if (change.type === "splice" && change.added.length) {
 							var oDwarfExtension = {
-								get FirstName$Validation() {
-									return Validation.getModelPropertyValidationByType(this, "FirstName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
-								},
-
-								get LastName$Validation() {
-									return Validation.getModelPropertyValidationByType(this, "LastName", oMobxModelTypeStringName, "string", state.$ignoreChanged);
-								},
-
 								get FullName() {
 									return (this.FirstName ? (this.FirstName + (this.LastName ? " " : "")) : "") + (this.LastName || "");
 								},
@@ -101,7 +87,7 @@ sap.ui.define([
 									var bValid = this.FirstName$Validation.valid && this.LastName$Validation.valid && Boolean(this.FullName);
 									return {
 										valid: bValid,
-										valueState: bValid ? "None" : (this.FullName$Changed || state.$ignoreChanged ? "Error" : "None"),
+										valueState: bValid ? "None" : (__mobx.get(this, "FullName$Changed") || state.$ignoreChanged ? "Error" : "None"),
 										valueStateText: bValid ? "" : oI18nResourceBundle.getText("atLeastCorrectFirstOrLast")
 									};
 								}
@@ -113,6 +99,9 @@ sap.ui.define([
 								}
 								var oDwarf = change.added[i];
 								__mobx.extendObservable(oDwarf, oDwarfExtension);
+
+								Validation.reactionByTypeChanged(oDwarf, "FirstName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
+								Validation.reactionByTypeChanged(oDwarf, "LastName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
 							}
 						}
 						return change;
