@@ -93,7 +93,7 @@ sap.ui.define([
 			//	Merge messages when validation message array changes
 			this._fAutorunDisposerValidationArrayMerge = __mobx.reaction(
 				function() {
-					return this.oObservableValidationMessages.messages.peek();
+					return this.oObservableValidationMessages.messages.peek(); // Returns an array with all the values
 				}.bind(this),
 				this._mergeMessageModelMessages.bind(this), // changes oAppModel
 				{
@@ -190,8 +190,13 @@ sap.ui.define([
 
 		onChangeSetChanged: function(oEvent) {
 
-			var oModel = oEvent.getSource().getBinding("value").getModel();
-			var sPath = oEvent.getSource().getBinding("value").getPath();
+			var oBinding = oEvent.getSource().getBinding("value");
+			if (oBinding.getBindings && oBinding.getBindings().length) { // composite binding
+				oBinding = oBinding.getBindings()[0];
+			}
+
+			var oModel = oBinding.getModel();
+			var sPath = oBinding.getPath();
 
 			oModel.setProperty(sPath + "$Changed", true);
 		},
