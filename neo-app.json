@@ -47,7 +47,7 @@
 		"target": {
 			"type": "destination",
 			"name": "localhost_zx6g_libmobxui5",
-			"entryPath": "/openui5-mobx-model-validation/src"
+			"entryPath": "/mobx-ui5val/src"
 		},
 		"description": "sap.ui.mobxValidation - MobxModel validation helpers"
 	}],
