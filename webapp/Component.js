@@ -15,7 +15,7 @@ jQuery.sap.registerModulePath("sap.ui.mobxValidation", "https://raw.githubuserco
 // jQuery.sap.registerModulePath("org.js.mobx", "/sap/bc/bsp/sap/zx6g_libmobx/4.1.1");
 // jQuery.sap.registerModulePath("org.js.mobxUtils", "/sap/bc/bsp/sap/zx6g_libmobx_utils/4.0.0");
 // jQuery.sap.registerModulePath("sap.ui.mobx", "/sap/bc/ui5_ui5/sap/zx6g_libmobxui5");
-//jQuery.sap.registerModulePath("sap.ui.mobxValidation", "/sap/bc/ui5_ui5/sap/zx6g_libmobxval");
+// jQuery.sap.registerModulePath("sap.ui.mobxValidation", "/sap/bc/ui5_ui5/sap/zx6g_libmobxval");
 /* eslint-enable sap-no-hardcoded-url */
 
 sap.ui.define([
