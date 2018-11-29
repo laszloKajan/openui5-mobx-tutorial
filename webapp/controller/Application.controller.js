@@ -181,6 +181,9 @@ sap.ui.define([
 		},
 
 		onExit: function() {
+			// TODO: testme
+			Validation.messageManager.removeAllMessages(this);
+			
 			this._fAutorunDisposerValidationArrayMerge();
 			this._fAutorunDisposerObservableValidationMessages();
 			this._fAutorunDisposerObservableValidation();
