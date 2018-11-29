@@ -10,10 +10,12 @@ sap.ui.define([
 	"sap/ui/model/ListBinding",
 	"org/debian/lkajan/mobxTutorial/model/models",
 	"org/js/mobx/mobx.umd.min",
+	"org/js/mobxUtils/mobx-utils.umd",
 	"sap/ui/mobx/MobxModel",
-	"sap/ui/mobxValidation/Utils"
+	"sap/ui/mobxValidation/Utils",
+	"sap/ui/core/message/Message"
 ], function(MessagePopover, MessagePopoverItem, Controller, JSONModel, ControlMessageProcessor, TypeString, ParseException,
-	ValidateException, ListBinding, models, __mobx, MobxModel, Validation) {
+	ValidateException, ListBinding, models, __mobx, __mobxUtils, MobxModel, Validation, Message) {
 	"use strict";
 
 	var oMessageTemplate = new MessagePopoverItem({
@@ -30,6 +32,22 @@ sap.ui.define([
 			template: oMessageTemplate
 		}
 	});
+	
+	var fTransformValidationToMessage = __mobxUtils.createTransformer(function(oValidation) { // Current value, index, array
+		return new Message({
+			message: oValidation.valueStateText.replace(/([{}])/g, "\\$1"),
+			type: oValidation.valueState,
+			validation: true
+		});
+	});
+	
+	var fFilterValidationToMessage = function(oValidation) {
+		return oValidation.valueState !== "None";
+	};
+	
+	var _transformValidationArrayToValidationMessages = __mobxUtils.createTransformer(function(aSource) {
+			return aSource.filter(fFilterValidationToMessage).map(fTransformValidationToMessage);
+		});
 
 	return Controller.extend("org.debian.lkajan.mobxTutorial.controller.Application", {
 
@@ -81,7 +99,7 @@ sap.ui.define([
 			});
 			this._fAutorunDisposerObservableValidationMessages = __mobx.reaction(
 				function() {
-					return Validation.transformValidationArrayToValidationMessages(this.oObservableValidation.results);
+					return _transformValidationArrayToValidationMessages(this.oObservableValidation.results);
 				}.bind(this),
 				function(aValidationMessages) {
 					this.oObservableValidationMessages.messages = aValidationMessages;
