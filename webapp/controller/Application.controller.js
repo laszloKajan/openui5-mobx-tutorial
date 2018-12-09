@@ -1,6 +1,6 @@
 sap.ui.define([
 	"sap/m/MessagePopover",
-	"sap/m/MessagePopoverItem",
+	"sap/m/MessagePopoverItem", // Deprecated, use MessageItem
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/message/ControlMessageProcessor",
@@ -14,40 +14,26 @@ sap.ui.define([
 	"sap/ui/mobx/MobxModel",
 	"sap/ui/mobxValidation/Utils",
 	"sap/ui/core/message/Message"
-], function(MessagePopover, MessagePopoverItem, Controller, JSONModel, ControlMessageProcessor, TypeString, ParseException,
+], function(MessagePopover, MessageItem, Controller, JSONModel, ControlMessageProcessor, TypeString, ParseException,
 	ValidateException, ListBinding, models, __mobx, __mobxUtils, MobxModel, Validation, Message) {
 	"use strict";
 
-	var oMessageTemplate = new MessagePopoverItem({
-		type: "{type}",
-		title: "{message}",
-		description: "{description}",
-		subtitle: "{subtitle}",
-		counter: "{counter}"
-	});
+	// TODO: removeme
+	// var fTransformValidationToMessage = __mobxUtils.createTransformer(function(oValidation) { // Current value, index, array
+	// 	return new Message({
+	// 		message: oValidation.valueStateText.replace(/([{}])/g, "\\$1"),
+	// 		type: oValidation.valueState,
+	// 		validation: true
+	// 	});
+	// });
 
-	var oMessagePopover = new MessagePopover({
-		items: {
-			path: "/validationMessages",
-			template: oMessageTemplate
-		}
-	});
-	
-	var fTransformValidationToMessage = __mobxUtils.createTransformer(function(oValidation) { // Current value, index, array
-		return new Message({
-			message: oValidation.valueStateText.replace(/([{}])/g, "\\$1"),
-			type: oValidation.valueState,
-			validation: true
-		});
-	});
-	
-	var fFilterValidationToMessage = function(oValidation) {
-		return oValidation.valueState !== "None";
-	};
-	
-	var _transformValidationArrayToValidationMessages = __mobxUtils.createTransformer(function(aSource) {
-			return aSource.filter(fFilterValidationToMessage).map(fTransformValidationToMessage);
-		});
+	// var fFilterValidationToMessage = function(oValidation) {
+	// 	return oValidation.valueState !== "None";
+	// };
+
+	// var _transformValidationArrayToValidationMessages = __mobxUtils.createTransformer(function(aSource) {
+	// 		return aSource.filter(fFilterValidationToMessage).map(fTransformValidationToMessage);
+	// 	});
 
 	return Controller.extend("org.debian.lkajan.mobxTutorial.controller.Application", {
 
@@ -60,6 +46,7 @@ sap.ui.define([
 				this.getOwnerComponent().getModel("i18n").getResourceBundle()
 			);
 			this.getView().setModel(oModelDomain, "domain");
+			var oObservableDomain = oModelDomain.getObservable();
 
 			// Application model
 			var oModelApp = new MobxModel(__mobx.observable({
@@ -74,18 +61,20 @@ sap.ui.define([
 			}));
 			this.getView().setModel(oModelApp);
 
-			// Message management
-			var oMessageManager = sap.ui.getCore().getMessageManager(),
-				oMessageProcessor = new ControlMessageProcessor();
-			oMessageManager.registerMessageProcessor(oMessageProcessor);
-			oMessageManager.registerObject(this.getView(), true); // Handle validation for this view
+			// Validation constraints and results to MessageManager (reaction)
+			Validation.messageManager.reactionValidationMsg(this, oModelDomain, "/SnowWhite/FirstName", "inputSWFirstName");
+			// Validation.messageManager.reactionValidationMsg(this, oModelDomain, "/SnowWhite/FirstNameWithApple", "inputSWFirstNameWithApple"); // TODO
+			Validation.messageManager.reactionValidationMsg(this, oModelDomain, "/SnowWhite/LastName", "inputSWLastName");
 
+			// TODO: dwarfs
+
+			// Overall validity
 			//	Flatten validation results: transform domain model to validation array
 			this.oObservableValidation = __mobx.observable({
 				results: [] // will be replaced by transformation to observable array
 			});
-			this._fAutorunDisposerObservableValidation = __mobx.reaction(
-				Validation.transformModelToValidationArray.bind(this, oModelDomain.getObservable()),
+			this._disposerObservableValidation = __mobx.reaction(
+				Validation.transformModelToValidationArray.bind(this, oObservableDomain),
 				function(aValidationResults) {
 					this.oObservableValidation.results = aValidationResults;
 				}.bind(this), {
@@ -93,37 +82,53 @@ sap.ui.define([
 				}
 			);
 
-			//	Transform validation array to validation message array
-			this.oObservableValidationMessages = __mobx.observable({
-				messages: []
-			});
-			this._fAutorunDisposerObservableValidationMessages = __mobx.reaction(
-				function() {
-					return _transformValidationArrayToValidationMessages(this.oObservableValidation.results);
-				}.bind(this),
-				function(aValidationMessages) {
-					this.oObservableValidationMessages.messages = aValidationMessages;
-				}.bind(this), {
-					fireImmediately: true
-				}
-			);
+			// var oMessageManager = sap.ui.getCore().getMessageManager(),
+			// 	oMessageProcessor = new ControlMessageProcessor();
+			// oMessageManager.registerMessageProcessor(oMessageProcessor);
+			// oMessageManager.registerObject(this.getView(), true); // Handle validation for this view
 
-			//	Merge messages when validation message array changes
-			this._fAutorunDisposerValidationArrayMerge = __mobx.reaction(
-				function() {
-					return this.oObservableValidationMessages.messages.peek(); // Returns an array with all the values
-				}.bind(this),
-				this._mergeMessageModelMessages.bind(this), // changes oModelApp
-				{
-					fireImmediately: true
-				}
-			);
+			// //	Flatten validation results: transform domain model to validation array
+			// this.oObservableValidation = __mobx.observable({
+			// 	results: [] // will be replaced by transformation to observable array
+			// });
+			// this._fAutorunDisposerObservableValidation = __mobx.reaction(
+			// 	Validation.transformModelToValidationArray.bind(this, oModelDomain.getObservable()),
+			// 	function(aValidationResults) {
+			// 		this.oObservableValidation.results = aValidationResults;
+			// 	}.bind(this), {
+			// 		fireImmediately: true
+			// 	}
+			// );
 
-			//	Merge messages when oMessageManager message model changes
-			this._oMessageModelBinding = new ListBinding(oMessageManager.getMessageModel(), "/");
-			this._oMessageModelBinding.attachChange(this._mergeMessageModelMessages, this);
+			// //	Transform validation array to validation message array
+			// this.oObservableValidationMessages = __mobx.observable({
+			// 	messages: []
+			// });
+			// this._fAutorunDisposerObservableValidationMessages = __mobx.reaction(
+			// 	function() {
+			// 		return _transformValidationArrayToValidationMessages(this.oObservableValidation.results);
+			// 	}.bind(this),
+			// 	function(aValidationMessages) {
+			// 		this.oObservableValidationMessages.messages = aValidationMessages;
+			// 	}.bind(this), {
+			// 		fireImmediately: true
+			// 	}
+			// );
 
-			oMessagePopover.setModel(oModelApp);
+			// //	Merge messages when validation message array changes
+			// this._fAutorunDisposerValidationArrayMerge = __mobx.reaction(
+			// 	function() {
+			// 		return this.oObservableValidationMessages.messages.peek(); // Returns an array with all the values
+			// 	}.bind(this),
+			// 	this._mergeMessageModelMessages.bind(this), // changes oModelApp
+			// 	{
+			// 		fireImmediately: true
+			// 	}
+			// );
+
+			// //	Merge messages when oMessageManager message model changes
+			// this._oMessageModelBinding = new ListBinding(oMessageManager.getMessageModel(), "/");
+			// this._oMessageModelBinding.attachChange(this._mergeMessageModelMessages, this);
 
 			// Reactive controls
 			__mobx.reaction(function() {
@@ -144,35 +149,37 @@ sap.ui.define([
 				function(nDwarfCount) {
 					["formElementDwarf2", "formElementDwarf2-1", "formElementDwarf2-2"].forEach(function(sId) {
 						var oControl = this.byId(sId);
-						oControl.setVisible(nDwarfCount >= 3);
+						if (oControl) {
+							oControl.setVisible(nDwarfCount >= 3);
+						}
 					}.bind(this));
 				}.bind(this), {
 					fireImmediately: true,
 					delay: 1
 				});
 
-			__mobx.reaction(function() {
-				var oDwarf = __mobx.get(this.getView().getModel("domain").getObservable().Dwarfs, 2);
-				return oDwarf ? {
-					firstNameValidation: oDwarf.FirstName$Validation,
-					fullNameValidation: oDwarf.FullName$Validation
-				} : undefined;
-			}.bind(this), function(oValidation) {
-				var oControlFirstName = this.byId("inputFirstNameDwarf2");
+			// __mobx.reaction(function() {
+			// 	var oDwarf = __mobx.get(this.getView().getModel("domain").getObservable().Dwarfs, 2);
+			// 	return oDwarf ? {
+			// 		firstNameValidation: oDwarf.FirstName$Validation,
+			// 		fullNameValidation: oDwarf.FullName$Validation
+			// 	} : undefined;
+			// }.bind(this), function(oValidation) {
+			// 	var oControlFirstName = this.byId("inputFirstNameDwarf2");
 
-				if (oValidation) {
+			// 	if (oValidation) {
 
-					oControlFirstName.setValueState(this.formatterValueStateFieldPair(oValidation.firstNameValidation, oValidation.fullNameValidation));
-					oControlFirstName.setValueStateText(this.formatterValueStateTextFieldPair(oValidation.firstNameValidation, oValidation.fullNameValidation));
-				} else {
+			// 		oControlFirstName.setValueState(this.formatterValueStateFieldPair(oValidation.firstNameValidation, oValidation.fullNameValidation));
+			// 		oControlFirstName.setValueStateText(this.formatterValueStateTextFieldPair(oValidation.firstNameValidation, oValidation.fullNameValidation));
+			// 	} else {
 
-					// oControlFirstName.setValueState("None");
-					// oControlFirstName.setValueStateText("None");
-				}
-			}.bind(this), {
-				fireImmediately: true,
-				delay: 1
-			});
+			// 		// oControlFirstName.setValueState("None");
+			// 		// oControlFirstName.setValueStateText("None");
+			// 	}
+			// }.bind(this), {
+			// 	fireImmediately: true,
+			// 	delay: 1
+			// });
 
 			__mobx.reaction(function() {
 				var oDwarf = __mobx.get(this.getView().getModel("domain").getObservable().Dwarfs, 2);
@@ -201,17 +208,29 @@ sap.ui.define([
 		onExit: function() {
 			// TODO: testme
 			Validation.messageManager.removeAllMessages(this);
-			
-			this._fAutorunDisposerValidationArrayMerge();
-			this._fAutorunDisposerObservableValidationMessages();
-			this._fAutorunDisposerObservableValidation();
-			this._oMessageModelBinding.detachChange(this._mergeMessageModelMessages, this);
-			this._oMessageModelBinding.destroy();
+
+			// // TODO: removeme
+			// this._fAutorunDisposerValidationArrayMerge();
+			// this._fAutorunDisposerObservableValidationMessages();
+			// this._fAutorunDisposerObservableValidation();
+			// this._oMessageModelBinding.detachChange(this._mergeMessageModelMessages, this);
+			// this._oMessageModelBinding.destroy();
 		},
 
 		onChangeSetChanged: function(oEvent) {
 
-			var oBinding = oEvent.getSource().getBinding("value");
+			var s = oEvent.getSource(),
+				sProperty;
+
+			switch (s.getMetadata().getName()) {
+				case "sap.m.Select":
+					sProperty = "selectedKey";
+					break;
+				default:
+					sProperty = "value";
+			}
+
+			var oBinding = oEvent.getSource().getBinding(sProperty);
 			if (oBinding.getBindings && oBinding.getBindings().length) { // composite binding
 				oBinding = oBinding.getBindings()[0];
 			}
@@ -224,7 +243,7 @@ sap.ui.define([
 
 		onChangeRevalidate: function(oEvent) {
 
-			this.validateDomain();
+			// this.validateDomain(); // TODO
 		},
 
 		onFixSWFirstName: function() {
@@ -232,9 +251,30 @@ sap.ui.define([
 			this.getView().getModel("domain").setProperty("/SnowWhite/FirstName", "Snow");
 		},
 
-		onValidationMessagesPress: function(oEvent) {
-
-			oMessagePopover.toggle(oEvent.getSource());
+		onMessagesIndicatorPress: function(oEvent) {
+			var oMessagesButton = oEvent.getSource();
+			if (!this._messagePopover) {
+				this._messagePopover = new MessagePopover({
+					items: {
+						path: "message>/",
+						// Consider filtering, or removal of messages when user navigates away
+						// filters: new Filter("target", "EQ", "/TransferSet(guid'E83935A8-4054-1EE3-AEE7-2B5E42289997')"),
+						template: new MessageItem({
+							type: "{message>type}",
+							title: "{message>message}",
+							subtitle: "{message>code}",
+							// description:,
+							// markupDescription:,
+							longtextUrl: "{message>descriptionUrl}"
+								// counter:,
+								// groupName:
+						})
+					}
+				});
+				this._messagePopover.setModel(sap.ui.getCore().getMessageManager().getMessageModel(), "message");
+				oMessagesButton.addDependent(this._messagePopover); // No need to destroy a dependent
+			}
+			this._messagePopover.toggle(oMessagesButton);
 		},
 
 		onPressAddDwarf: function(oEvent) {

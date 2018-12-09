@@ -34,6 +34,7 @@ sap.ui.define([
 					// Note: though not obligatory, it's a good idea to initialize the names, because otherwise we get RegExp matching errors like
 					//	`Cannot read property 'search' of undefined`
 					FirstName: "",
+					//FirstNameWithApple: "", // TODO: make a better example
 					LastName: "",
 					// Computed
 					get FullName() {
@@ -65,49 +66,48 @@ sap.ui.define([
 			});
 			// Validation
 			Validation.reactionByTypeChanged(state.SnowWhite, "FirstName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
-			Validation.reactionByTypeChanged(state.SnowWhite, "FirstName", this.oMobxModelTypeStringWithApple, "string", state, "$ignoreChanged",
-				"FirstName$WithApple$Validation", "FirstName$Changed");
+			// Validation.reactionByTypeChanged(state.SnowWhite, "FirstNameWithApple", this.oMobxModelTypeStringWithApple, "string", state, "$ignoreChanged"); // TODO
 			Validation.reactionByTypeChanged(state.SnowWhite, "LastName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
 
-			// Dwarf handling
-			// Idea: provide help with adding the ($Changed and) $Validation property
-			__mobx.observe(state, "Dwarfs", function(change0) { // Returns a disposer
-				if (change0.type === "update") {
-					__mobx.intercept(state.Dwarfs, function(change) {
-						// New dwarf(s) added
-						if (change.type === "splice" && change.added.length) {
-							var oDwarfExtension = {
-								get FullName() {
-									return (this.FirstName ? (this.FirstName + (this.LastName ? " " : "")) : "") + (this.LastName || "");
-								},
-								get FullName$Changed() { // Indicates "changed by user"
-									return __mobx.get(this, "FirstName$Changed") || __mobx.get(this, "LastName$Changed");
-								},
-								get FullName$Validation() {
-									var bValid = this.FirstName$Validation.valid && this.LastName$Validation.valid && Boolean(this.FullName);
-									return {
-										valid: bValid,
-										valueState: bValid ? "None" : (__mobx.get(this, "FullName$Changed") || state.$ignoreChanged ? "Error" : "None"),
-										valueStateText: bValid ? "" : oI18nResourceBundle.getText("atLeastCorrectFirstOrLast")
-									};
-								}
-							};
+			// // Dwarf handling
+			// // Idea: provide help with adding the ($Changed and) $Validation property
+			// __mobx.observe(state, "Dwarfs", function(change0) { // Returns a disposer
+			// 	if (change0.type === "update") {
+			// 		__mobx.intercept(state.Dwarfs, function(change) {
+			// 			// New dwarf(s) added
+			// 			if (change.type === "splice" && change.added.length) {
+			// 				var oDwarfExtension = {
+			// 					get FullName() {
+			// 						return (this.FirstName ? (this.FirstName + (this.LastName ? " " : "")) : "") + (this.LastName || "");
+			// 					},
+			// 					get FullName$Changed() { // Indicates "changed by user"
+			// 						return __mobx.get(this, "FirstName$Changed") || __mobx.get(this, "LastName$Changed");
+			// 					},
+			// 					get FullName$Validation() {
+			// 						var bValid = this.FirstName$Validation.valid && this.LastName$Validation.valid && Boolean(this.FullName);
+			// 						return {
+			// 							valid: bValid,
+			// 							valueState: bValid ? "None" : (__mobx.get(this, "FullName$Changed") || state.$ignoreChanged ? "Error" : "None"),
+			// 							valueStateText: bValid ? "" : oI18nResourceBundle.getText("atLeastCorrectFirstOrLast")
+			// 						};
+			// 					}
+			// 				};
 
-							for (var i = 0; i < change.added.length; ++i) {
-								if (!__mobx.isObservableObject(change.added[i])) {
-									change.added[i] = __mobx.observable(change.added[i]);
-								}
-								var oDwarf = change.added[i];
-								__mobx.extendObservable(oDwarf, oDwarfExtension);
+			// 				for (var i = 0; i < change.added.length; ++i) {
+			// 					if (!__mobx.isObservableObject(change.added[i])) {
+			// 						change.added[i] = __mobx.observable(change.added[i]);
+			// 					}
+			// 					var oDwarf = change.added[i];
+			// 					__mobx.extendObservable(oDwarf, oDwarfExtension);
 
-								Validation.reactionByTypeChanged(oDwarf, "FirstName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
-								Validation.reactionByTypeChanged(oDwarf, "LastName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
-							}
-						}
-						return change;
-					}.bind(this));
-				}
-			}.bind(this), true); // fireImmediately
+			// 					Validation.reactionByTypeChanged(oDwarf, "FirstName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
+			// 					Validation.reactionByTypeChanged(oDwarf, "LastName", this.oMobxModelTypeStringName, "string", state, "$ignoreChanged");
+			// 				}
+			// 			}
+			// 			return change;
+			// 		}.bind(this));
+			// 	}
+			// }.bind(this), true); // fireImmediately
 
 			var oModel = new MobxModel(state);
 			return oModel;

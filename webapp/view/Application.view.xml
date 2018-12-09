@@ -20,33 +20,38 @@
 									<f:FormElement label="{i18n>name}">
 										<f:fields>
 											<Input id="inputSWFirstName"
-												value="{path: 'domain&gt;/SnowWhite/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{parts: ['domain&gt;/SnowWhite/FirstName$Validation', 'domain&gt;/SnowWhite/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
-												valueStateText="{parts: ['domain&gt;/SnowWhite/FirstName$Validation', 'domain&gt;/SnowWhite/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
+												value="{path: 'domain>/SnowWhite/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String'}"
 												change="onChangeSetChanged"/>
 											<Input id="inputSWLastName"
-												value="{path: 'domain&gt;/SnowWhite/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{parts: ['domain&gt;/SnowWhite/LastName$Validation', 'domain&gt;/SnowWhite/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
-												valueStateText="{parts: ['domain&gt;/SnowWhite/LastName$Validation', 'domain&gt;/SnowWhite/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
+												value="{path: 'domain>/SnowWhite/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement label="{i18n>firstNameWithApple}">
+									<!-- Bad example with the string type. Use e.g. Number() -->
+									<!--f:FormElement label="{i18n>firstNameWithApple}">
 										<f:fields>
-											<Input
-												value="{path: 'domain&gt;/SnowWhite/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.StringWithApple', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{parts: ['domain&gt;/SnowWhite/FirstName$WithApple$Validation', 'domain&gt;/SnowWhite/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
-												valueStateText="{parts: ['domain&gt;/SnowWhite/FirstName$WithApple$Validation', 'domain&gt;/SnowWhite/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
-												change="onChangeSetChanged"/>
+											<Input id="inputSWFirstNameWithApple"
+												value="{path: 'domain>/SnowWhite/FirstNameWithApple', type: 'org.debian.lkajan.mobxTutorial.model.type.StringWithApple', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+												change="onChangeSetChanged">
+												<layoutData>
+													<l:GridData span="L5 M5 S5"/>
+												</layoutData>
+											</Input>
 										</f:fields>
-									</f:FormElement>
+									</f:FormElement-->
 									<f:FormElement label="{i18n>inModel}">
 										<f:fields>
 											<Text text="`{domain&gt;/SnowWhite/FirstName}'"/>
 											<Text text="`{domain&gt;/SnowWhite/LastName}'"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement label="">
+									<!-- Bad example with the string type. Use e.g. Number() -->
+									<!--f:FormElement label="">
+										<f:fields>
+											<Text text="`{domain&gt;/SnowWhite/FirstNameWithApple}'"/>
+										</f:fields>
+									</f:FormElement-->
+									<f:FormElement label="{i18n>fullName}">
 										<f:fields>
 											<Text text="`{domain&gt;/SnowWhite/FullName}'"/>
 										</f:fields>
@@ -65,7 +70,7 @@
 									</f:FormElement>
 								</f:formElements>
 							</f:FormContainer>
-							<f:FormContainer title="{i18n>dwarfs}" visible="true">
+							<!--f:FormContainer title="{i18n>dwarfs}" visible="true">
 								<f:formElements>
 									<f:FormElement visible="true" label="">
 										<f:fields>
@@ -75,13 +80,11 @@
 									</f:FormElement>
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 1}" label="{i18n>dwarf0}">
 										<f:fields>
-											<Input value="{path: 'domain&gt;/Dwarfs/0/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{parts: ['domain&gt;/Dwarfs/0/FirstName$Validation', 'domain&gt;/Dwarfs/0/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
-												valueStateText="{parts: ['domain&gt;/Dwarfs/0/FirstName$Validation', 'domain&gt;/Dwarfs/0/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
+											<Input
+												value="{path: 'domain&gt;/Dwarfs/0/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
 												change="onChangeSetChanged"/>
-											<Input value="{path: 'domain&gt;/Dwarfs/0/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{parts: ['domain&gt;/Dwarfs/0/LastName$Validation', 'domain&gt;/Dwarfs/0/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
-												valueStateText="{parts: ['domain&gt;/Dwarfs/0/LastName$Validation', 'domain&gt;/Dwarfs/0/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
+											<Input
+												value="{path: 'domain&gt;/Dwarfs/0/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
@@ -98,13 +101,11 @@
 									</f:FormElement>
 									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 2}" label="{i18n>dwarf1}">
 										<f:fields>
-											<Input value="{path: 'domain&gt;/Dwarfs/1/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{parts: ['domain&gt;/Dwarfs/1/FirstName$Validation', 'domain&gt;/Dwarfs/1/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
-												valueStateText="{parts: ['domain&gt;/Dwarfs/1/FirstName$Validation', 'domain&gt;/Dwarfs/1/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
+											<Input
+												value="{path: 'domain&gt;/Dwarfs/1/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
 												change="onChangeSetChanged"/>
-											<Input value="{path: 'domain&gt;/Dwarfs/1/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												valueState="{parts: ['domain&gt;/Dwarfs/1/LastName$Validation', 'domain&gt;/Dwarfs/1/FullName$Validation'], formatter: '.formatterValueStateFieldPair'}"
-												valueStateText="{parts: ['domain&gt;/Dwarfs/1/LastName$Validation', 'domain&gt;/Dwarfs/1/FullName$Validation'], formatter: '.formatterValueStateTextFieldPair'}"
+											<Input
+												value="{path: 'domain&gt;/Dwarfs/1/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
@@ -121,9 +122,11 @@
 									</f:FormElement>
 									<f:FormElement id="formElementDwarf2" label="{i18n>dwarf2}">
 										<f:fields>
-											<Input id="inputFirstNameDwarf2" value="{path: 'domain&gt;/Dwarfs/2/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+											<Input id="inputFirstNameDwarf2"
+												value="{path: 'domain&gt;/Dwarfs/2/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
 												change="onChangeSetChanged"/>
-											<Input id="inputLastNameDwarf2" value="{path: 'domain&gt;/Dwarfs/2/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+											<Input id="inputLastNameDwarf2"
+												value="{path: 'domain&gt;/Dwarfs/2/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
@@ -139,18 +142,18 @@
 										</f:fields>
 									</f:FormElement>
 								</f:formElements>
-							</f:FormContainer>
+							</f:FormContainer-->
 						</f:formContainers>
 					</f:Form>
 				</content>
 				<footer>
 					<Toolbar>
-						<Button id="btnMessagePopup" icon="sap-icon://message-popup" visible="true" press="onValidationMessagesPress"/>
+						<Button id="btnMessagePopup" icon="sap-icon://message-popup" visible="true" press="onMessagesIndicatorPress"/>
 						<Button text="{i18n>fixSWFirstName}" press="onFixSWFirstName"/>
 						<ToolbarSpacer/>
 						<Button id="btnAddDwarf" text="{i18n>addDwarf}" enabled="{= ${domain&gt;/DwarfCount} &lt; 3}" press="onPressAddDwarf"/>
 						<Button id="btnRemoveDwarf" text="{i18n>removeDwarf}" enabled="{= ${domain&gt;/DwarfCount} &gt; 0}" press="onPressRemoveDwarf"/>
-						<ToggleButton text="{i18n>revealValueStateText}" pressed="{domain&gt;/$ignoreChanged}" />
+						<ToggleButton text="{i18n>revealValueStateText}" pressed="{domain&gt;/$ignoreChanged}"/>
 						<Button id="btnSubmit" text="{i18n>submit}" enabled="{/canSubmit}" type="{= ${/canSubmit} ? 'Emphasized' : 'Default'}"/>
 					</Toolbar>
 				</footer>

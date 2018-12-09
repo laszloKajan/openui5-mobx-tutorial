@@ -38,6 +38,7 @@
 	},
 
 	"sap.ui5": {
+		"handleValidation": true,
 		"rootView": {
 			"viewName": "org.debian.lkajan.mobxTutorial.view.Application",
 			"type": "XML"
