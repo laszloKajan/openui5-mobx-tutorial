@@ -47,7 +47,7 @@ sap.ui.define([
 			);
 			this.getView().setModel(oModelDomain, "domain");
 			var oObservableDomain = oModelDomain.getObservable();
-
+			
 			// Application model
 			var oModelApp = new MobxModel(__mobx.observable({
 				get canSubmit() {
@@ -61,12 +61,13 @@ sap.ui.define([
 			}));
 			this.getView().setModel(oModelApp);
 
-			// Validation constraints and results to MessageManager (reaction)
+			// Validation results to MessageManager (reaction)
 			Validation.messageManager.reactionValidationMsg(this, oModelDomain, "/SnowWhite/FirstName", "inputSWFirstName");
-			// Validation.messageManager.reactionValidationMsg(this, oModelDomain, "/SnowWhite/FirstNameWithApple", "inputSWFirstNameWithApple"); // TODO
+			Validation.messageManager.reactionValidationMsg(this, oModelDomain, "/SnowWhite/FirstNameWithApple", "inputSWFirstNameWithApple");
 			Validation.messageManager.reactionValidationMsg(this, oModelDomain, "/SnowWhite/LastName", "inputSWLastName");
+			Validation.messageManager.reactionValidationMsg(this, oModelDomain, "/SnowWhite/FullName", "inputSWFirstName");
 
-			// TODO: dwarfs
+			// Validation results of Dwarfs: done where dwarfs are added
 
 			// Overall validity
 			//	Flatten validation results: transform domain model to validation array
@@ -131,6 +132,7 @@ sap.ui.define([
 			// this._oMessageModelBinding.attachChange(this._mergeMessageModelMessages, this);
 
 			// Reactive controls
+			// TODO: review
 			__mobx.reaction(function() {
 					return this.getView().getModel().getObservable().messageCount;
 				}.bind(this),
@@ -165,7 +167,7 @@ sap.ui.define([
 			// 		fullNameValidation: oDwarf.FullName$Validation
 			// 	} : undefined;
 			// }.bind(this), function(oValidation) {
-			// 	var oControlFirstName = this.byId("inputFirstNameDwarf2");
+			// 	var oControlFirstName = this.byId("inputD2FirstName");
 
 			// 	if (oValidation) {
 
@@ -181,28 +183,29 @@ sap.ui.define([
 			// 	delay: 1
 			// });
 
-			__mobx.reaction(function() {
-				var oDwarf = __mobx.get(this.getView().getModel("domain").getObservable().Dwarfs, 2);
-				return oDwarf ? {
-					lastNameValidation: oDwarf.LastName$Validation,
-					fullNameValidation: oDwarf.FullName$Validation
-				} : undefined;
-			}.bind(this), function(oValidation) {
-				var oControlLastName = this.byId("inputLastNameDwarf2");
+			// // TODO: reviseme
+			// __mobx.reaction(function() {
+			// 	var oDwarf = __mobx.get(this.getView().getModel("domain").getObservable().Dwarfs, 2);
+			// 	return oDwarf ? {
+			// 		lastNameValidation: oDwarf.LastName$Validation,
+			// 		fullNameValidation: oDwarf.FullName$Validation
+			// 	} : undefined;
+			// }.bind(this), function(oValidation) {
+			// 	var oControlLastName = this.byId("inputD2LastName");
 
-				if (oValidation) {
+			// 	if (oValidation) {
 
-					oControlLastName.setValueState(this.formatterValueStateFieldPair(oValidation.lastNameValidation, oValidation.fullNameValidation));
-					oControlLastName.setValueStateText(this.formatterValueStateTextFieldPair(oValidation.lastNameValidation, oValidation.fullNameValidation));
-				} else {
+			// 		oControlLastName.setValueState(this.formatterValueStateFieldPair(oValidation.lastNameValidation, oValidation.fullNameValidation));
+			// 		oControlLastName.setValueStateText(this.formatterValueStateTextFieldPair(oValidation.lastNameValidation, oValidation.fullNameValidation));
+			// 	} else {
 
-					// oControlLastName.setValueState("None");
-					// oControlLastName.setValueStateText("None");
-				}
-			}.bind(this), {
-				fireImmediately: true,
-				delay: 1
-			});
+			// 		// oControlLastName.setValueState("None");
+			// 		// oControlLastName.setValueStateText("None");
+			// 	}
+			// }.bind(this), {
+			// 	fireImmediately: true,
+			// 	delay: 1
+			// });
 		},
 
 		onExit: function() {
@@ -239,11 +242,12 @@ sap.ui.define([
 			var sPath = oBinding.getPath();
 
 			oModel.setProperty(sPath + "$Changed", true);
+			// oModel.setProperty(sPath + "$Changed", window.performance.now());
 		},
 
 		onChangeRevalidate: function(oEvent) {
 
-			// this.validateDomain(); // TODO
+			this.validateDomain();
 		},
 
 		onFixSWFirstName: function() {
@@ -279,11 +283,21 @@ sap.ui.define([
 
 		onPressAddDwarf: function(oEvent) {
 
-			var oDomainObservable = this.getView().getModel("domain").getObservable();
+			var oModelDomain = this.getView().getModel("domain"),
+				oDomainObservable = oModelDomain.getObservable();
 
 			if (oDomainObservable.DwarfCount < 3) {
 				var oDwarf = models.createDwarf();
 				oDomainObservable.Dwarfs.push(oDwarf);
+
+				// Validation results of Dwarfs
+				var nDwarfIdx = oDomainObservable.Dwarfs.length - 1;
+				Validation.messageManager.reactionValidationMsg(this, oModelDomain, "/Dwarfs/" + nDwarfIdx + "/FirstName",
+					"inputD" + nDwarfIdx + "FirstName");
+				Validation.messageManager.reactionValidationMsg(this, oModelDomain, "/Dwarfs/" + nDwarfIdx + "/LastName",
+					"inputD" + nDwarfIdx + "LastName");
+				Validation.messageManager.reactionValidationMsg(this, oModelDomain, "/Dwarfs/" + nDwarfIdx + "/FullName",
+					"inputD" + nDwarfIdx + "FirstName");
 			}
 		},
 

@@ -19,38 +19,35 @@
 									</f:FormElement>
 									<f:FormElement label="{i18n>name}">
 										<f:fields>
-											<Input id="inputSWFirstName"
-												value="{path: 'domain>/SnowWhite/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String'}"
+											<Input id="inputSWFirstName" value="{path: 'domain>/SnowWhite/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String'}"
 												change="onChangeSetChanged"/>
-											<Input id="inputSWLastName"
-												value="{path: 'domain>/SnowWhite/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+											<Input id="inputSWLastName" value="{path: 'domain>/SnowWhite/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String'}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
-									<!-- Bad example with the string type. Use e.g. Number() -->
-									<!--f:FormElement label="{i18n>firstNameWithApple}">
-										<f:fields>
-											<Input id="inputSWFirstNameWithApple"
-												value="{path: 'domain>/SnowWhite/FirstNameWithApple', type: 'org.debian.lkajan.mobxTutorial.model.type.StringWithApple', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												change="onChangeSetChanged">
-												<layoutData>
-													<l:GridData span="L5 M5 S5"/>
-												</layoutData>
-											</Input>
-										</f:fields>
-									</f:FormElement-->
 									<f:FormElement label="{i18n>inModel}">
 										<f:fields>
 											<Text text="`{domain&gt;/SnowWhite/FirstName}'"/>
 											<Text text="`{domain&gt;/SnowWhite/LastName}'"/>
 										</f:fields>
 									</f:FormElement>
-									<!-- Bad example with the string type. Use e.g. Number() -->
-									<!--f:FormElement label="">
+									<!-- Badly chosen example with the string type. Something Number() and formatting would be better. -->
+									<f:FormElement label="{i18n>firstNameWithApple}">
+										<f:fields>
+											<Input id="inputSWFirstNameWithApple"
+												value="{path: 'domain>/SnowWhite/FirstNameWithApple', type: 'org.debian.lkajan.mobxTutorial.model.type.StringWithApple'}"
+												change="onChangeSetChanged">
+												<layoutData>
+													<l:GridData span="L4 M4 S4"/>
+												</layoutData>
+											</Input>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement label="{i18n>inModel}">
 										<f:fields>
 											<Text text="`{domain&gt;/SnowWhite/FirstNameWithApple}'"/>
 										</f:fields>
-									</f:FormElement-->
+									</f:FormElement>
 									<f:FormElement label="{i18n>fullName}">
 										<f:fields>
 											<Text text="`{domain&gt;/SnowWhite/FullName}'"/>
@@ -70,7 +67,10 @@
 									</f:FormElement>
 								</f:formElements>
 							</f:FormContainer>
-							<!--f:FormContainer title="{i18n>dwarfs}" visible="true">
+							<!--
+							Dwarfs
+							-->
+							<f:FormContainer title="{i18n>dwarfs}" visible="true">
 								<f:formElements>
 									<f:FormElement visible="true" label="">
 										<f:fields>
@@ -78,71 +78,71 @@
 											<Label text="{i18n>lastName}" design="Bold"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 1}" label="{i18n>dwarf0}">
+									<f:FormElement visible="{= ${domain>/DwarfCount} &gt;= 1}" label="{i18n>dwarf0}">
 										<f:fields>
-											<Input
-												value="{path: 'domain&gt;/Dwarfs/0/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+											<Input id="inputD0FirstName"
+												value="{path: 'domain>/Dwarfs/0/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String'}"
 												change="onChangeSetChanged"/>
-											<Input
-												value="{path: 'domain&gt;/Dwarfs/0/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												change="onChangeSetChanged"/>
-										</f:fields>
-									</f:FormElement>
-									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 1}" label="{i18n>inModel}">
-										<f:fields>
-											<Text text="`{domain&gt;/Dwarfs/0/FirstName}'"/>
-											<Text text="`{domain&gt;/Dwarfs/0/LastName}'"/>
-										</f:fields>
-									</f:FormElement>
-									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 1}" label="">
-										<f:fields>
-											<Text text="`{domain&gt;/Dwarfs/0/FullName}'"/>
-										</f:fields>
-									</f:FormElement>
-									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 2}" label="{i18n>dwarf1}">
-										<f:fields>
-											<Input
-												value="{path: 'domain&gt;/Dwarfs/1/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
-												change="onChangeSetChanged"/>
-											<Input
-												value="{path: 'domain&gt;/Dwarfs/1/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+											<Input id="inputD0LastName"
+												value="{path: 'domain>/Dwarfs/0/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String'}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 2}" label="{i18n>inModel}">
+									<f:FormElement visible="{= ${domain>/DwarfCount} &gt;= 1}" label="{i18n>inModel}">
 										<f:fields>
-											<Text text="`{domain&gt;/Dwarfs/1/FirstName}'"/>
-											<Text text="`{domain&gt;/Dwarfs/1/LastName}'"/>
+											<Text text="`{domain>/Dwarfs/0/FirstName}'"/>
+											<Text text="`{domain>/Dwarfs/0/LastName}'"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 2}" label="">
+									<f:FormElement visible="{= ${domain&gt;/DwarfCount} &gt;= 1}" label="{i18n>fullName}">
 										<f:fields>
-											<Text text="`{domain&gt;/Dwarfs/1/FullName}'"/>
+											<Text text="`{domain>/Dwarfs/0/FullName}'"/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement visible="{= ${domain>/DwarfCount} &gt;= 2}" label="{i18n>dwarf1}">
+										<f:fields>
+											<Input id="inputD1FirstName"
+												value="{path: 'domain>/Dwarfs/1/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String'}"
+												change="onChangeSetChanged"/>
+											<Input id="inputD1LastName"
+												value="{path: 'domain>/Dwarfs/1/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String'}"
+												change="onChangeSetChanged"/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement visible="{= ${domain>/DwarfCount} &gt;= 2}" label="{i18n>inModel}">
+										<f:fields>
+											<Text text="`{domain>/Dwarfs/1/FirstName}'"/>
+											<Text text="`{domain>/Dwarfs/1/LastName}'"/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement visible="{= ${domain>/DwarfCount} &gt;= 2}" label="{i18n>fullName}">
+										<f:fields>
+											<Text text="`{domain>/Dwarfs/1/FullName}'"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement id="formElementDwarf2" label="{i18n>dwarf2}">
 										<f:fields>
-											<Input id="inputFirstNameDwarf2"
-												value="{path: 'domain&gt;/Dwarfs/2/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+											<Input id="inputD2FirstName"
+												value="{path: 'domain>/Dwarfs/2/FirstName', type: 'org.debian.lkajan.mobxTutorial.model.type.String'}"
 												change="onChangeSetChanged"/>
-											<Input id="inputLastNameDwarf2"
-												value="{path: 'domain&gt;/Dwarfs/2/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String', constraints: {search: '^(|[^0-9\\s]{3,})$'}}"
+											<Input id="inputD2LastName"
+												value="{path: 'domain>/Dwarfs/2/LastName', type: 'org.debian.lkajan.mobxTutorial.model.type.String'}"
 												change="onChangeSetChanged"/>
 										</f:fields>
 									</f:FormElement>
 									<f:FormElement id="formElementDwarf2-1" label="{i18n>inModel}">
 										<f:fields>
-											<Text text="`{domain&gt;/Dwarfs/2/FirstName}'"/>
-											<Text text="`{domain&gt;/Dwarfs/2/LastName}'"/>
+											<Text text="`{domain>/Dwarfs/2/FirstName}'"/>
+											<Text text="`{domain>/Dwarfs/2/LastName}'"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement id="formElementDwarf2-2" label="">
+									<f:FormElement id="formElementDwarf2-2" label="{i18n>fullName}">
 										<f:fields>
-											<Text text="`{domain&gt;/Dwarfs/2/FullName}'"/>
+											<Text text="`{domain>/Dwarfs/2/FullName}'"/>
 										</f:fields>
 									</f:FormElement>
 								</f:formElements>
-							</f:FormContainer-->
+							</f:FormContainer>
 						</f:formContainers>
 					</f:Form>
 				</content>
@@ -151,9 +151,9 @@
 						<Button id="btnMessagePopup" icon="sap-icon://message-popup" visible="true" press="onMessagesIndicatorPress"/>
 						<Button text="{i18n>fixSWFirstName}" press="onFixSWFirstName"/>
 						<ToolbarSpacer/>
-						<Button id="btnAddDwarf" text="{i18n>addDwarf}" enabled="{= ${domain&gt;/DwarfCount} &lt; 3}" press="onPressAddDwarf"/>
-						<Button id="btnRemoveDwarf" text="{i18n>removeDwarf}" enabled="{= ${domain&gt;/DwarfCount} &gt; 0}" press="onPressRemoveDwarf"/>
-						<ToggleButton text="{i18n>revealValueStateText}" pressed="{domain&gt;/$ignoreChanged}"/>
+						<Button id="btnAddDwarf" text="{i18n>addDwarf}" enabled="{= ${domain>/DwarfCount} &lt; 3}" press="onPressAddDwarf"/>
+						<Button id="btnRemoveDwarf" text="{i18n>removeDwarf}" enabled="{= ${domain>/DwarfCount} &gt; 0}" press="onPressRemoveDwarf"/>
+						<ToggleButton text="{i18n>revealValueStateText}" pressed="{domain>/$ignoreChanged}"/>
 						<Button id="btnSubmit" text="{i18n>submit}" enabled="{/canSubmit}" type="{= ${/canSubmit} ? 'Emphasized' : 'Default'}"/>
 					</Toolbar>
 				</footer>

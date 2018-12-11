@@ -39,7 +39,7 @@
 		"target": {
 			"type": "destination",
 			"name": "localhost_zx6g_libmobxui5",
-			"entryPath": "/openui5-mobx-model/src"
+			"entryPath": "/mobx-ui5/src"
 		},
 		"description": "sap.ui.mobx - MobX bindings for SAPUI5"
 	}, {
