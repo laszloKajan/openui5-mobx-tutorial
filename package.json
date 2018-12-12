@@ -1,0 +1,13 @@
+{
+  "name": "org-debian-lkajan-mobxTutorial",
+  "version": "1.0.0",
+  "description": "MobxModel and validation tutorial",
+  "license": "Apache-2.0",
+  "author": "Laszlo Kajan",
+  "peerDependencies": {
+    "mobx": "^4.1.1",
+    "mobx-utils": "^4.0.1",
+    "openui5-mobx-model": "^2.0.0",
+    "openui5-mobx-model-validation": "^1.1.0"
+  }
+}

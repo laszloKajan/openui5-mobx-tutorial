@@ -47,15 +47,17 @@ sap.ui.define([
 			);
 			this.getView().setModel(oModelDomain, "domain");
 			var oObservableDomain = oModelDomain.getObservable();
-			
+
 			// Application model
 			var oModelApp = new MobxModel(__mobx.observable({
 				get canSubmit() {
 					return this.validateDomainCallResult && that.oObservableValidation.results.length === 0;
 				},
-				get messageCount() {
-					return this.validationMessages.length;
-				},
+				messageModelMessageCount: undefined,
+				// TODO: review messageCount: should be updated when message model message count changes
+				// get messageCount() {
+				// 	return this.validationMessages.length;
+				// },
 				validateDomainCallResult: false,
 				validationMessages: []
 			}));
@@ -84,6 +86,7 @@ sap.ui.define([
 			);
 
 			// var oMessageManager = sap.ui.getCore().getMessageManager(),
+			// TODO: removeme
 			// 	oMessageProcessor = new ControlMessageProcessor();
 			// oMessageManager.registerMessageProcessor(oMessageProcessor);
 			// oMessageManager.registerObject(this.getView(), true); // Handle validation for this view
@@ -127,16 +130,16 @@ sap.ui.define([
 			// 	}
 			// );
 
-			// //	Merge messages when oMessageManager message model changes
-			// this._oMessageModelBinding = new ListBinding(oMessageManager.getMessageModel(), "/");
-			// this._oMessageModelBinding.attachChange(this._mergeMessageModelMessages, this);
+			// Count messages when oMessageManager message model changes
+			var oMessageManager = sap.ui.getCore().getMessageManager();
+			this._oMessageModelBinding = new ListBinding(oMessageManager.getMessageModel(), "/");
+			this._oMessageModelBinding.attachChange(this._onMessageModelChange, this);
 
 			// Reactive controls
-			// TODO: review
-			__mobx.reaction(function() {
-					return this.getView().getModel().getObservable().messageCount;
+			this._fDisposerMessageCount = __mobx.reaction(function() {
+					return this.getView().getModel().getObservable().messageModelMessageCount;
 				}.bind(this),
-				function(nMessageCount, reaction) {
+				function(nMessageCount) {
 					var oControl = this.byId("btnMessagePopup");
 					oControl.setText(nMessageCount > 0 ? nMessageCount : "");
 					oControl.setType(nMessageCount > 0 ? "Emphasized" : "Default");
@@ -145,6 +148,7 @@ sap.ui.define([
 					delay: 1
 				});
 
+			// 3rd dwarf visibility
 			__mobx.reaction(function() {
 					return this.getView().getModel("domain").getObservable().DwarfCount;
 				}.bind(this),
@@ -209,9 +213,9 @@ sap.ui.define([
 		},
 
 		onExit: function() {
-			// TODO: testme
 			Validation.messageManager.removeAllMessages(this);
 
+			this._fDisposerMessageCount();
 			// // TODO: removeme
 			// this._fAutorunDisposerValidationArrayMerge();
 			// this._fAutorunDisposerObservableValidationMessages();
@@ -342,12 +346,12 @@ sap.ui.define([
 			}
 		},
 
-		_mergeMessageModelMessages: function() {
+		_onMessageModelChange: function() {
 
 			var oMessageManager = sap.ui.getCore().getMessageManager();
 
-			this.getView().getModel().getObservable().validationMessages =
-				oMessageManager.getMessageModel().getData().concat(this.oObservableValidationMessages.messages.peek());
+			this.getView().getModel().getObservable().messageModelMessageCount =
+				oMessageManager.getMessageModel().getData().length;
 		},
 
 		_validateInput: function(sId) {
